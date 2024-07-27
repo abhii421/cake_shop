@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "868795691192",
+    "project_id": "clinic-7f4ea",
+    "storage_bucket": "clinic-7f4ea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868795691192:android:dfcf403d96d5fd9186844d",
+        "android_client_info": {
+          "package_name": "com.example.capstone_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRsYUe1Z2rvjGER-oUhdm3100MTKcXyyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868795691192:android:8329eb7d7a23a26286844d",
+        "android_client_info": {
+          "package_name": "com.example.clinic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRsYUe1Z2rvjGER-oUhdm3100MTKcXyyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
