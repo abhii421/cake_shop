@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 
-
 class CakeDetailsScreen extends StatefulWidget {
   const CakeDetailsScreen({super.key, required this.index1});
 
@@ -15,8 +14,8 @@ class CakeDetailsScreen extends StatefulWidget {
 }
 
 
-String cakeWeight = '1.5 Pounds';
-double productDetails_Collapsible_ContainerHeight = 20;
+double cakeWeight = 1.0;
+//double productDetails_Collapsible_ContainerHeight = 20;
 
 String convertToString (List ingredientList){
   String newString = '';
@@ -27,13 +26,34 @@ String convertToString (List ingredientList){
 }
 
 
-Map priceMap = {
-  '0.5 Pounds' : 200,
+double weightDifference(double weight){
 
-};
+  double weightDifferenceFunctionOutput = weight-0.5;
+  return weightDifferenceFunctionOutput;
+}
 
-int returnFinalPrice(){
-  int Final_Price = 0;
+double returnFinalPrice(int index, double cakeSize){
+
+  double Final_Price = 350;
+  double finalWeightDifference = weightDifference(cakeSize);
+
+
+  if(index == 1 || index == 4){
+    Final_Price = 350 + (finalWeightDifference*400);
+  }
+
+  if(index==5 || index==6){
+    Final_Price = 400 + (finalWeightDifference*480);
+  }
+
+  if(index == 0 || index == 2){
+    Final_Price = 450 + (finalWeightDifference*550);
+  }
+
+  if(index == 3){
+    Final_Price = 500 + (finalWeightDifference*600);
+  }
+
   return Final_Price;
 }
 
@@ -99,35 +119,35 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                   children: [
                     OutlinedButton(onPressed: (){
                       setState(() {
-                        cakeWeight = '0.5 Pounds';
+                        cakeWeight = 0.5;
                       });
-                    }, child: Text('0.5 Pounds',  style: TextStyle(fontWeight: cakeWeight == '0.5 Pounds' ? FontWeight.bold : FontWeight.w100),)),
+                    }, child: Text('0.5 Pound',  style: TextStyle(fontWeight: cakeWeight == 0.5 ? FontWeight.bold : FontWeight.w100),)),
 
                     const SizedBox(width: 15,),
 
                     OutlinedButton(onPressed: (){
                       setState(() {
-                        cakeWeight = '1 Pounds';
+                        cakeWeight = 1;
                       });
 
-                      }, child: Text('1 Pounds', style: TextStyle(fontWeight: cakeWeight == '1 Pounds' ? FontWeight.bold : FontWeight.w100),)),
+                      }, child: Text('1 Pound', style: TextStyle(fontWeight: cakeWeight == 1 ? FontWeight.bold : FontWeight.w100),)),
 
                     const SizedBox(width: 20,),
 
                     OutlinedButton(onPressed: (){
                       setState(() {
-                        cakeWeight = '1.5 Pounds';
+                        cakeWeight = 1.5;
                         });
-                      }, child: Text('1.5 Pounds', style: TextStyle(fontWeight: cakeWeight == '1.5 Pounds' ? FontWeight.bold : FontWeight.w100),)),
+                      }, child: Text('1.5 Pound', style: TextStyle(fontWeight: cakeWeight == 1.5 ? FontWeight.bold : FontWeight.w100),)),
 
                     const SizedBox(width: 20,),
 
                     OutlinedButton(onPressed: (){
                       setState(() {
-                        cakeWeight = '2.0 Pounds';
+                        cakeWeight = 2.0;
                       });
 
-                    }, child: Text('2.0 Pounds', style: TextStyle(fontWeight: cakeWeight == '2.0 Pounds' ? FontWeight.bold : FontWeight.w100),)),
+                    }, child: Text('2.0 Pounds', style: TextStyle(fontWeight: cakeWeight == 2.0 ? FontWeight.bold : FontWeight.w100),)),
 
                     const SizedBox(width: 20,),
                   ],
@@ -135,47 +155,21 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
               ),
             ),
 
-            // Text(Cakes_List[widget.index1].ingredients.toString(), style: TextStyle(color: Colors.black),),
+            Divider(thickness: 3, color: Colors.grey.shade200,),
 
-            // ElevatedButton(onPressed: (){
-            //   print(Cakes_List[widget.index1].description);
-            //   }, child: Text('print description'))
-
-
-            // GestureDetector(
-            //   child: Container(
-            //     height: productDetails_Collapsible_ContainerHeight,
-            //     width: 800,
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(15.0),
-            //       child: const Text('Product Details', style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),),
-            //     ),
-            //
-            //   ),
-            //   onTap: (){
-            //     setState(() {
-            //       productDetails_Collapsible_ContainerHeight = 70;
-            //     });
-            //     print('Button was clicked');
-            //   },
-            // ),
-            // Row(
-            //   children: [
-            //     Text(convertToString(Cakes_List[widget.index1].ingredients), style: TextStyle(color: Colors.black),textAlign: TextAlign.start,),
-            //   ],
-            // )
-
-            //Divider(thickness: 3, color: Colors.grey.shade200,),
-
-
-
-
-
+            Row(
+              children: [
+                SizedBox(width: 15,),
+                Text('₹', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                SizedBox(width: 7,),
+                Container(
+                  child: Text(returnFinalPrice(widget.index1,cakeWeight).toString(), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                )
+              ],
+            ),
 
             ExpansionTile(
-              // shape: ShapeBorder(
-              //
-              // ),
+              // shape: ShapeBorder(),
               title: Text('Product Ingredients', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),),
               children: [
                 Padding(
@@ -185,9 +179,6 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
               ],
             ),
 
-            Container(
-              child: Text(returnFinalPrice().toString()),
-            )
 
           ],
         ),
