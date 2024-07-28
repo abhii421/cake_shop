@@ -23,15 +23,10 @@ class CakeDetailsScreen extends StatefulWidget {
 
 
 
-
-
-
-
-
-
 double cakeWeight = 1.0;
-double toppingsCostToBePassed2 = 0;
-//double productDetails_Collapsible_ContainerHeight = 20;
+double cakeToppingPrice = 0;
+double containerBorderWidth = 2.2;
+var vary = 6;
 
 
 
@@ -50,20 +45,6 @@ String convertToString (List ingredientList){
 
 
 
-double getToppingsCost(){
-  print('Toppings cost which is received - $toppingsCostToBePassed');
-
-
-  toppingsCostToBePassed2 = toppingsCostToBePassed.toDouble();
-
-  return toppingsCostToBePassed.toDouble();
-
-}
-
-
-
-
-
 
 double weightDifference(double weight){
 
@@ -75,35 +56,31 @@ double weightDifference(double weight){
 
 
 
-double returnFinalPrice(int index, double cakeSize, double toppingsCost){
+double returnFinalPrice(int index, double cakeSize, double cakeToppingDaam){
 
   double Final_Price = 350;
   double finalWeightDifference = weightDifference(cakeSize);
 
 
-  toppingsCost = toppingsCostToBePassed;
-
-  print('toppings cost received at final price function - $toppingsCost');
-
 
 
 
   if(index == 1 || index == 4){
-    Final_Price = 350 + (finalWeightDifference*400) + toppingsCost;
+    Final_Price = 350 + (finalWeightDifference*400)+cakeToppingDaam;
   }
 
   if(index==5 || index==6){
-    Final_Price = 400 + (finalWeightDifference*480) + toppingsCost;
+    Final_Price = 400 + (finalWeightDifference*480)+cakeToppingDaam;
   }
 
   if(index == 0 || index == 2){
-    Final_Price = 450 + (finalWeightDifference*550) + toppingsCost;
+    Final_Price = 450 + (finalWeightDifference*550)+cakeToppingDaam;
   }
 
   if(index == 3){
-    Final_Price = 500 + (finalWeightDifference*600) + toppingsCost;
+    Final_Price = 500 + (finalWeightDifference*600)+cakeToppingDaam;
   }
-
+  print(Final_Price);
   return Final_Price;
 }
 
@@ -111,8 +88,6 @@ double returnFinalPrice(int index, double cakeSize, double toppingsCost){
 class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-
-
 
 
     int returnIndex(index){
@@ -125,6 +100,9 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
         return 0;
       }
     }
+
+
+
 
     var deviceWidth = MediaQuery.of(context).size.width;
     var deviceHeight = MediaQuery.of(context).size.height;
@@ -218,11 +196,19 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                 const SizedBox(width: 15,),
                 const Text('₹', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
                 const SizedBox(width: 7,),
-                Text(returnFinalPrice(widget.index1,cakeWeight, getToppingsCost()).toString(), style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)
+                Text(
+                  returnFinalPrice(widget.index1,cakeWeight,cakeToppingPrice).toString(),
+                  style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                )
               ],
             ),
 
             const Text('Toppings',  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),),
+
+
+
+
+
 
             Container(
               width : deviceWidth,
@@ -232,19 +218,76 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                 itemCount: toppingsList.length,
 
                 itemBuilder: (context, index2) {
-                return ToppingsContainer(indexOfToppingsList: index2, indexOfCakeList: widget.index1, weightOfCake: cakeWeight);
+                return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: InkWell(
+                    child: Container(
+                      height: deviceHeight/4.7,
+                      width: deviceWidth*0.36,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(17),
+                        border: Border.all(color: Colors.black,width: vary == index2 ? 3 : 1 ),
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: deviceWidth*0.38,
+                            height: deviceHeight/7,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(topRight: Radius.circular(15),topLeft: Radius.circular(15),bottomRight: Radius.elliptical(25, 25),bottomLeft: Radius.elliptical(25, 25) ),
+                              child: Image.network(toppingsList[index2].imageNetworkAddress,
+                                  fit: BoxFit.fill
+                              ),
+                            ),
+                          ),
+                          Text(toppingsList[index2].toppingName, style: const TextStyle(fontWeight: FontWeight.w600),),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('₹'),
+                              const SizedBox(width: 4),
+                              Text(toppingsList[index2].price.toString(), style: const TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
 
+
+
+                    onTap: (){
+
+                      print(index2);
+                      print(toppingsList[index2].toppingName);
+                      print(toppingsList[index2].price);
+                      setState(() {
+                        cakeToppingPrice = toppingsList[index2].price.toDouble();
+                        vary = index2;
+                      });
+
+                    },
+                  ),
+                );
+                  //ToppingsContainer(indexOfToppingsList: index2, indexOfCakeList: widget.index1, weightOfCake: cakeWeight, onToppingSelected : updateToppingCost(toppingsList[index2].price.toDouble()));
                 },
               ),
             ),
 
+
+
+
+
             const Divider(height: 2,),
+
+
+
+
             ExpansionTile(
               // shape: ShapeBorder(),
               title: const Text('Product Ingredients', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),),
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 190),
+                  padding: const EdgeInsets.only(right: 220),
                   child: Text(convertToString(Cakes_List[widget.index1].ingredients), style: const TextStyle(color: Colors.black),textAlign: TextAlign.start,),
                 )
               ],

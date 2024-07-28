@@ -40,6 +40,11 @@ const List<ToppingsModels> toppingsList = [
     imageNetworkAddress: 'https://cbx-prod.b-cdn.net/COLOURBOX1927983.jpg?width=800&height=800&quality=70'
   ),
 
+  ToppingsModels(toppingName: 'No Topping',
+      price: 0,
+      imageNetworkAddress: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe2Ro_IHQptn_hQrD6jPSQrPZ5b6dpEHAiwQ&s'
+  )
+
   // ToppingsModels(
   //   toppingName: 'Whipped Cream',
   //   price: 120,
