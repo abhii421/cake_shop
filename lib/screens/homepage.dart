@@ -142,7 +142,7 @@ class _homepageState extends State<homepage> {
                       left: 60,
                       child: Container(
                         height: 270,
-                        width: deviceWidth,
+                        width: deviceWidth-70,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: Cakes_List.length,
