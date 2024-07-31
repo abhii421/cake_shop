@@ -5,6 +5,7 @@ import 'package:capstone_1/screens/order_done_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:math';
 
 
 class OrderConfirmation extends StatefulWidget {
@@ -26,6 +27,17 @@ final firebase = FirebaseAuth.instance;
 
 Future<void> sendOrdersToFirebase() async{
   
+}
+
+String generateRandomString(int length) {
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  final random = Random();
+  return String.fromCharCodes(
+    Iterable.generate(
+      length,
+          (_) => characters.codeUnitAt(random.nextInt(characters.length)),
+    ),
+  );
 }
 
 class _OrderConfirmationState extends State<OrderConfirmation> {
@@ -113,10 +125,11 @@ class _OrderConfirmationState extends State<OrderConfirmation> {
                 try{
 
                   await firestore.collection('Cake Orders').add({
+                    'Order ID' : generateRandomString(10),
                     'Cake Name' : Cakes_List[widget.cakeNameIndex].name.toString(),
                     'Topping Name' : toppingsList[widget.cakeToppingIndex].toppingName.toString(),
                     'Cake Price' : widget.totalPrice.toString(),
-                    'Cake Weight (in pounds)' : widget.totalPrice.toString(),
+                    'Cake Weight (in pounds)' : widget.cakeSize.toString(),
                     'Customer UID' : userkaUID,
                     'Customer Phone Number' : userkaPhoneNumber,
                     'Delivery Address' : userkaAddress,
@@ -125,6 +138,7 @@ class _OrderConfirmationState extends State<OrderConfirmation> {
                     'Order Prepared' : false,
                     'Order Dispatched' : false,
                     'Order Delivered' : false
+
                   });
                  
                 }

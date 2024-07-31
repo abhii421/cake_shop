@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:capstone_1/data/all_cake_list.dart';
+import 'package:capstone_1/screens/admin_home_screen.dart';
 import 'package:capstone_1/screens/cake_details_screen.dart';
 import 'package:capstone_1/screens/user_profile_screen.dart';
 import 'package:capstone_1/widgets/slider_containers.dart';
@@ -107,6 +108,11 @@ class _homepageState extends State<homepage> {
               },
                   child: const Text('Sign Out'),
               ),
+              ElevatedButton(onPressed: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                  return AdminHomePage();
+                },));
+              }, child: Text('Admin Panel')),
               const SizedBox(height: 30,)
             ],
           ),
