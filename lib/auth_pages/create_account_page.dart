@@ -36,7 +36,7 @@ class _createaccountpageState extends State<createaccountpage> {
 
     try {
       await _firebase.createUserWithEmailAndPassword(email: userKaEmail, password: userKaPassword);
-
+      //UserCredential userCredential = await _firebase.createUserWithEmailAndPassword(email: userKaEmail, password: userKaPassword);
       await sendEmailVerification(context);
     } on FirebaseAuthException catch (error){
       // if(error.code == 'email-already-in-use'){

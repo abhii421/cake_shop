@@ -1,11 +1,11 @@
 import 'package:capstone_1/data/all_cake_list.dart';
 import 'package:capstone_1/data/all_toppings_list.dart';
-import 'package:capstone_1/models/cake_model.dart';
-import 'package:capstone_1/widgets/toppings_containers.dart';
+//import 'package:capstone_1/models/cake_model.dart';
+//import 'package:capstone_1/widgets/toppings_containers.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 
@@ -42,10 +42,6 @@ String convertToString (List ingredientList){
 
 
 
-
-
-
-
 double weightDifference(double weight){
 
   double weightDifferenceFunctionOutput = weight-0.5;
@@ -60,8 +56,6 @@ double returnFinalPrice(int index, double cakeSize, double cakeToppingDaam){
 
   double Final_Price = 350;
   double finalWeightDifference = weightDifference(cakeSize);
-
-
 
 
 
@@ -85,27 +79,34 @@ double returnFinalPrice(int index, double cakeSize, double cakeToppingDaam){
 }
 
 
+
+
+
+
+
 class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
 
 
-    int returnIndex(index){
-
-      if(index < 6)
-      {
+    int returnIndexOfNextCake(index){
+      if(index < 6) {
         return index+1;
+        //if the index is not at the last element of the cakes_List, then simply increase the index by 1,
+        //so that the image carousel can show another 2nd image.
       }
       else{
         return 0;
+        //if the index is at last of the cakes_List, the next index will give an error of "not in range",
+        //in that case, return the first cake in the list i.e. cake at 0th index
       }
     }
 
 
-
-
     var deviceWidth = MediaQuery.of(context).size.width;
     var deviceHeight = MediaQuery.of(context).size.height;
+
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -114,7 +115,7 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
             CarouselSlider(items: [
               Image.asset(Cakes_List[widget.index1].imgPath,fit: BoxFit.contain, width : deviceWidth,),
               Container(color: Colors.lime, child : const Center(child: Text('Another image added to test sliding carousel'))),
-              Image.asset(Cakes_List[returnIndex(widget.index1)].imgPath,fit: BoxFit.contain),
+              Image.asset(Cakes_List[returnIndexOfNextCake(widget.index1)].imgPath,fit: BoxFit.contain),
             ],
                 options: CarouselOptions(
                     animateToClosest: true,
@@ -125,7 +126,6 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                     viewportFraction: 1.0,
                 )
             ),
-
 
             const SizedBox(height: 15,),
 
@@ -188,8 +188,8 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
             ),
 
 
-
             Divider(thickness: 3, color: Colors.grey.shade200,),
+
 
             Row(
               children: [
@@ -273,25 +273,92 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
               ),
             ),
 
+            SizedBox(height: 15,),
 
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(onPressed: (){},
+                  child: const Text('Add to Cart', style: TextStyle(color: Colors.white, fontSize: 18),),
+                  style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
+                      padding: EdgeInsets.symmetric(horizontal: deviceWidth*0.115, vertical: 18),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1),
+                      side: const BorderSide(style: BorderStyle.none))),),
 
+                TextButton(onPressed: (){},
+                  child: const Text('Buy Now', style: TextStyle(color: Colors.white, fontSize: 18),),
+                  style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
 
+                      padding:  EdgeInsets.symmetric(horizontal: deviceWidth*0.150, vertical: 18),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1),
+                          side: const BorderSide(style: BorderStyle.none))),),
+              ],
+            ),
 
             const Divider(height: 2,),
-
-
-
 
             ExpansionTile(
               // shape: ShapeBorder(),
               title: const Text('Product Ingredients', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),),
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 220),
-                  child: Text(convertToString(Cakes_List[widget.index1].ingredients), style: const TextStyle(color: Colors.black),textAlign: TextAlign.start,),
+                  padding: const EdgeInsets.only(right: 230),
+                  child: Text(convertToString(Cakes_List[widget.index1].ingredients), style: const TextStyle(color: Colors.black),textAlign: TextAlign.left,),
                 )
               ],
             ),
+
+            const Divider(height: 10),
+
+
+            const SizedBox(height: 20,),
+
+
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Row(
+                children: [
+                  SizedBox(width: 2,),
+                  Text('Customer Reviews', style: TextStyle(fontSize: 20),textAlign: TextAlign.left),
+                  SizedBox(width: 25,),
+                  OutlinedButton(onPressed: (){
+
+                  },
+                      child: Text('Give Ratings', style: TextStyle(fontWeight: FontWeight.bold),),
+                     style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
+                  )
+                ],
+              ),
+            ),
+
+
+              Row(
+                //mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(0.034*deviceWidth),
+                    child: Container(
+                      width: 0.4*deviceWidth,
+                      height: 0.2*deviceHeight,
+                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
+                    ),
+                  ),
+
+                  Container(height: 0.17*deviceHeight, width: 0.5,color :Colors.grey),
+
+                  Padding(
+                    padding: EdgeInsets.all(0.034*deviceWidth),
+                    child: Container(
+                      width: 0.46*deviceWidth,
+                      height: 0.2*deviceHeight,
+                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
+                    ),
+                  )
+                ],
+              ),
+
+              //padding: EdgeInsets.all(20),
+
           ],
         ),
       )

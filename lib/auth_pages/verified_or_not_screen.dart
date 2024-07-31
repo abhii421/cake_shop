@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:capstone_1/screens/homepage.dart';
+import 'package:capstone_1/auth_pages/create_account_page.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -22,6 +23,7 @@ class _VerfiedOrNotState extends State<VerfiedOrNot> {
   @override
   void initState(){
     super.initState();
+    //https://stackoverflow.com/questions/52569602/flutter-run-function-every-x-amount-of-seconds
     checkEmailVerification();
   }
 
@@ -29,6 +31,8 @@ class _VerfiedOrNotState extends State<VerfiedOrNot> {
 
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user1 = auth.currentUser;
+    //User? user1Credentials = userCredential.user;
+
 
 
 
@@ -71,7 +75,7 @@ class _VerfiedOrNotState extends State<VerfiedOrNot> {
             ElevatedButton(onPressed:()
             {
               checkEmailVerification();
-              print('user says yes');
+              //print('user says yes');
             },
                 child: Text('Yes, I have verified'))
           ],
