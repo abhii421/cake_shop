@@ -1,11 +1,17 @@
 import 'dart:ui';
 import 'package:capstone_1/data/all_cake_list.dart';
 import 'package:capstone_1/screens/cake_details_screen.dart';
+import 'package:capstone_1/screens/user_profile_screen.dart';
 import 'package:capstone_1/widgets/slider_containers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_1/main.dart';
 
+String? userkaName;
+String? userkaAddress;
+String? userkaPhoneNumber;
+var userkaUID = FirebaseAuth.instance.currentUser!.uid;
 
 class homepage extends StatefulWidget {
   const homepage({super.key});
@@ -17,6 +23,35 @@ class homepage extends StatefulWidget {
 
 
 class _homepageState extends State<homepage> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+
+  Future<void> getUserData() async{
+
+    final userUID = FirebaseAuth.instance.currentUser!.uid;
+
+    final DocumentSnapshot userDoc =
+      await FirebaseFirestore.instance.collection('Cake Customers').where('User UID', isEqualTo: userUID).get()
+      .then((snapshot) => snapshot.docs.first);
+
+
+    if(userDoc.exists){
+      setState(() {
+        var data = userDoc.data() as Map<String, dynamic>;
+         userkaName = data['Name'] as String;
+         userkaAddress = data['Address'] as String;
+         userkaPhoneNumber = data['Phone Number'];
+
+      });
+      }
+  }
+
   @override
   Widget build(BuildContext context) {
     var deviceHeight = MediaQuery.of(context).size.height;
@@ -28,12 +63,16 @@ class _homepageState extends State<homepage> {
     //   );
     // }
 
+
+
+
+
     return Scaffold(
 
 
       appBar: AppBar(
         backgroundColor: Colors.purpleAccent.shade100.withOpacity(0.2),
-        title: const Text('Hello User'),
+        title: Row(children: [ Text('Hello'), SizedBox(width:5), Text(userkaName ?? ''),],),
         actions: [IconButton(onPressed: (){}, icon: const Icon(Icons.shopping_cart))],
       ),
 
@@ -42,12 +81,19 @@ class _homepageState extends State<homepage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 40,),
+
                 Image.asset('assets/images/chocolate-cake.png',
                 ),
-              ElevatedButton(onPressed: (){}, child: Text('Profile'),),
               const SizedBox(height: 30,),
-              ElevatedButton(onPressed: (){}, child: Text('My Orders'),),
+              ElevatedButton(onPressed: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                      return UserProfilePage();
+                    },));
+                },
+                child: const Text('Profile'),),
+
+              const SizedBox(height: 30,),
+              ElevatedButton(onPressed: (){}, child: const Text('My Orders'),),
               const SizedBox(height: 30,),
               ElevatedButton(
                   onPressed:() async {

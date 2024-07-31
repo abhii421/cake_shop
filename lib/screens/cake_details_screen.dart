@@ -1,5 +1,6 @@
 import 'package:capstone_1/data/all_cake_list.dart';
 import 'package:capstone_1/data/all_toppings_list.dart';
+import 'package:capstone_1/screens/order_confirmation_page.dart';
 //import 'package:capstone_1/models/cake_model.dart';
 //import 'package:capstone_1/widgets/toppings_containers.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,8 @@ double cakeWeight = 1.0;
 double cakeToppingPrice = 0;
 double containerBorderWidth = 2.2;
 var vary = 6;
+int cakeToppingIndexforPassingToOrderConfirmationPage = 6;
+int cakeName_index = 0;
 
 
 
@@ -102,6 +105,12 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
       }
     }
 
+
+    int returncakeListIndex(){
+      print(widget.index1);
+      return widget.index1;
+
+    }
 
     var deviceWidth = MediaQuery.of(context).size.width;
     var deviceHeight = MediaQuery.of(context).size.height;
@@ -263,6 +272,8 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                       setState(() {
                         cakeToppingPrice = toppingsList[index2].price.toDouble();
                         vary = index2;
+                        cakeToppingIndexforPassingToOrderConfirmationPage = index2;
+
                       });
 
                     },
@@ -286,7 +297,16 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                       side: const BorderSide(style: BorderStyle.none))),),
 
                 TextButton(onPressed: (){
+
                   print(FirebaseAuth.instance.currentUser!.uid);
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    return OrderConfirmation(totalPrice: returnFinalPrice(widget.index1,cakeWeight,cakeToppingPrice),
+                      cakeToppingIndex: cakeToppingIndexforPassingToOrderConfirmationPage,
+                      cakeSize: cakeWeight,
+                      cakeNameIndex: widget.index1,
+                    );
+                  },));
+                  //print(Fire)
                 },
                   child: const Text('Buy Now', style: const TextStyle(color: Colors.white, fontSize: 18),),
                   style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
@@ -320,7 +340,7 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
               padding: const EdgeInsets.all(15.0),
               child: Row(
                 children: [
-                  SizedBox(width: 2,),
+                  const SizedBox(width: 2,),
                   Text('Customer Reviews', style: TextStyle(fontSize: 20),textAlign: TextAlign.left),
                   SizedBox(width: 25,),
                   OutlinedButton(onPressed: (){
