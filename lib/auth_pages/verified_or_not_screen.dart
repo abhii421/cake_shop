@@ -1,3 +1,4 @@
+import 'package:capstone_1/auth_pages/add_user_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:capstone_1/screens/homepage.dart';
@@ -49,7 +50,7 @@ class _VerfiedOrNotState extends State<VerfiedOrNot> {
     if(isEmailVerified == true){
 
       Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => homepage()
+          builder: (context) => AddUserDetailsScreen()
 
       )
 

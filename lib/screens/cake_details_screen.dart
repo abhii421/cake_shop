@@ -285,8 +285,10 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1),
                       side: const BorderSide(style: BorderStyle.none))),),
 
-                TextButton(onPressed: (){},
-                  child: const Text('Buy Now', style: TextStyle(color: Colors.white, fontSize: 18),),
+                TextButton(onPressed: (){
+                  print(FirebaseAuth.instance.currentUser!.uid);
+                },
+                  child: const Text('Buy Now', style: const TextStyle(color: Colors.white, fontSize: 18),),
                   style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
 
                       padding:  EdgeInsets.symmetric(horizontal: deviceWidth*0.150, vertical: 18),

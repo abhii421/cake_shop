@@ -29,6 +29,7 @@ class _createaccountpageState extends State<createaccountpage> {
   var userKaName = '';
 
 //ISS WALE FUNCTION KO SIGN UP BUTTON CALL KARTA HAI
+
   void _signupwithemail() async {
     //print('yha');
     _formkakey.currentState!.validate();
@@ -214,7 +215,7 @@ class _createaccountpageState extends State<createaccountpage> {
                             child: TextFormField(
                               validator: (value) {
                                 //(!value.contains(RegExp(r'[!@#\$%^&*()<>?/|}{~:]')))
-                                if (value == null || value.isEmpty || value.length < 6)
+                                if (value == null || value.isEmpty || value.length < 8)
                                 {
                                   print('it is not a strong password');
                                   return 'Make a strong password';
