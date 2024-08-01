@@ -287,14 +287,15 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
             SizedBox(height: 15,),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                TextButton(onPressed: (){},
-                  child: const Text('Add to Cart', style: TextStyle(color: Colors.white, fontSize: 18),),
-                  style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
-                      padding: EdgeInsets.symmetric(horizontal: deviceWidth*0.115, vertical: 18),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1),
-                      side: const BorderSide(style: BorderStyle.none))),),
+                // TextButton(
+                //   onPressed: (){},
+                //   child: const Text('Add to Cart', style: TextStyle(color: Colors.white, fontSize: 18),),
+                //   style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
+                //       padding: EdgeInsets.symmetric(horizontal: deviceWidth*0.115, vertical: 18),
+                //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1),
+                //       side: const BorderSide(style: BorderStyle.none))),),
 
                 TextButton(onPressed: (){
 
@@ -308,15 +309,15 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                   },));
                   //print(Fire)
                 },
-                  child: const Text('Buy Now', style: const TextStyle(color: Colors.white, fontSize: 18),),
+                  child: const Text('                Buy Now                  ', style: const TextStyle(color: Colors.white, fontSize: 18),),
                   style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
 
                       padding:  EdgeInsets.symmetric(horizontal: deviceWidth*0.150, vertical: 18),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),
                           side: const BorderSide(style: BorderStyle.none))),),
               ],
             ),
-
+                SizedBox(height : 10),
             const Divider(height: 2,),
 
             ExpansionTile(
@@ -336,48 +337,48 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
             const SizedBox(height: 20,),
 
 
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Row(
-                children: [
-                  const SizedBox(width: 2,),
-                  Text('Customer Reviews', style: TextStyle(fontSize: 20),textAlign: TextAlign.left),
-                  SizedBox(width: 25,),
-                  OutlinedButton(onPressed: (){
-
-                  },
-                      child: Text('Give Ratings', style: TextStyle(fontWeight: FontWeight.bold),),
-                     style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
-                  )
-                ],
-              ),
-            ),
-
-
-              Row(
-                //mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(0.034*deviceWidth),
-                    child: Container(
-                      width: 0.4*deviceWidth,
-                      height: 0.2*deviceHeight,
-                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
-                    ),
-                  ),
-
-                  Container(height: 0.17*deviceHeight, width: 0.5,color :Colors.grey),
-
-                  Padding(
-                    padding: EdgeInsets.all(0.034*deviceWidth),
-                    child: Container(
-                      width: 0.46*deviceWidth,
-                      height: 0.2*deviceHeight,
-                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
-                    ),
-                  )
-                ],
-              ),
+            // Padding(
+            //   padding: const EdgeInsets.all(15.0),
+            //   child: Row(
+            //     children: [
+            //       const SizedBox(width: 2,),
+            //       Text('Customer Reviews', style: TextStyle(fontSize: 20),textAlign: TextAlign.left),
+            //       SizedBox(width: 25,),
+            //       OutlinedButton(onPressed: (){
+            //
+            //       },
+            //           child: Text('Give Ratings', style: TextStyle(fontWeight: FontWeight.bold),),
+            //          style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            //
+            //
+            //   Row(
+            //     //mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Padding(
+            //         padding: EdgeInsets.all(0.034*deviceWidth),
+            //         child: Container(
+            //           width: 0.4*deviceWidth,
+            //           height: 0.2*deviceHeight,
+            //           decoration: BoxDecoration(border: Border.all(width: 0.5)),
+            //         ),
+            //       ),
+            //
+            //       Container(height: 0.17*deviceHeight, width: 0.5,color :Colors.grey),
+            //
+            //       Padding(
+            //         padding: EdgeInsets.all(0.034*deviceWidth),
+            //         child: Container(
+            //           width: 0.46*deviceWidth,
+            //           height: 0.2*deviceHeight,
+            //           decoration: BoxDecoration(border: Border.all(width: 0.5)),
+            //         ),
+            //       )
+            //     ],
+            //   ),
 
               //padding: EdgeInsets.all(20),
 
