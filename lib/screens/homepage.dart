@@ -32,6 +32,7 @@ class _homepageState extends State<homepage> {
   @override
   void initState() {
     super.initState();
+
     getUserData();
   }
 
@@ -122,7 +123,7 @@ class _homepageState extends State<homepage> {
                       },));
                 }
 
-                else {
+                else if(adminLoggedIn == 1){
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) {
                         return AdminHomePage();

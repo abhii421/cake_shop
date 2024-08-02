@@ -1,5 +1,7 @@
+import 'package:capstone_1/screens/all_orders_admin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -102,12 +104,24 @@ class _AdminHomePageState extends State<AdminHomePage> {
         body: Column(
           children: [
             SizedBox(height: 10,),
-            ElevatedButton(
-                onPressed: (){
-                  fetchData();
-                  }
-                , child: Text('Refresh')
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                    onPressed: (){
+                      fetchData();
+                    }
+                    , child: Text('Refresh')
+                ),
+                ElevatedButton(onPressed: (){
+
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    return AllOrdersAdminScreen();
+                  },));
+                }, child: Text(('All orders')))
+              ],
+            )
+            ,
             Expanded(
               child: ListView.builder(
               itemCount: documents.length,
@@ -193,19 +207,34 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         child: Card(
                           child:ListTile(
                                leading: Text('Accept the Order'),
-                                //trailing: Text(documentData['Order Accepted'] == true ? 'Accepted' : 'Not Accepted Yet')
                           ),
                             ),
                         ),
                       onTap: () {
                         setState(() {
 
+                          updateOrderAcceptedField(documentData['Order ID'], 'Order Accepted');
+                          fetchData();
+                          print(documentData['Order Accepted'].toString());
+                          showDialog(context: context, builder: (context) {
+                            return AlertDialog(
+                              title: Row(
+                                children: [
+                                  Text("Order Accepted - ", style: TextStyle(fontSize: 15),),
+                                  Text(documentData['Order Accepted'].toString(), style: TextStyle(fontSize: 15),)],),
+
+                              actions: [
+                                TextButton(onPressed: (){
+                                  Navigator.of(context).pop();
+                                },
+                                    child: Text('Okay'))
+                              ],
+                            );
+                          },);
                           //accepted = !accepted;
                         });
 
-                        updateOrderAcceptedField(documentData['Order ID'], 'Order Accepted');
-                        fetchData();
-                        print(documentData['Order Accepted'].toString());
+
 
                       },
                     ),
@@ -226,10 +255,28 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         setState(() {
                           //prepared = !prepared;
 
+                          updateOrderPreparedField(documentData['Order ID'], 'Order Prepared');
+                          fetchData();
+                          print(documentData['Order Prepared'].toString());
+
+
+                          showDialog(context: context, builder: (context) {
+                            return AlertDialog(
+                              title: Row(
+                                children: [
+                                  Text("Order Prepared - ", style: TextStyle(fontSize: 15),),
+                                  Text((!documentData['Order Prepared']).toString(), style: TextStyle(fontSize: 15),)],),
+
+                              actions: [
+                                TextButton(onPressed: (){
+                                  Navigator.of(context).pop();
+                                },
+                                    child: Text('Okay'))
+                              ],
+                            );
+                          },);
                         });
-                        updateOrderPreparedField(documentData['Order ID'], 'Order Prepared');
-                        fetchData();
-                        print(documentData['Order Prepared'].toString());
+
                       },
                     ),
 
@@ -248,7 +295,24 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       onTap: () {
                                 updateOrderDispatchedField(documentData['Order ID'], 'Order Dispatched');
                                 fetchData();
-                                print(documentData['Order Prepared'].toString());
+                                //print(documentData['Order Prepared'].toString());
+
+
+                                showDialog(context: context, builder: (context) {
+                                  return AlertDialog(
+                                    title: Row(
+                                      children: [
+                                        Text("Order Dispatched - ", style: TextStyle(fontSize: 15),),
+                                        Text((!documentData['Order Dispatched']).toString(), style: TextStyle(fontSize: 15),)],),
+
+                                    actions: [
+                                      TextButton(onPressed: (){
+                                        Navigator.of(context).pop();
+                                      },
+                                          child: Text('Okay'))
+                                    ],
+                                  );
+                                },);
                       },
                     ),
 
@@ -267,6 +331,28 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       onTap: () {
                         setState(() {
                           updateOrderDeliveredField(documentData['Order ID'], 'Order Delivered');
+                          fetchData();
+
+
+
+
+
+
+                          showDialog(context: context, builder: (context) {
+                            return AlertDialog(
+                              title: Row(
+                                children: [
+                                  Text("Order Delivered - ", style: TextStyle(fontSize: 15),),
+                                  Text((!documentData['Order Delivered']).toString() , style: TextStyle(fontSize: 15),)],),
+
+                              actions: [
+                                TextButton(onPressed: (){
+                                  Navigator.of(context).pop();
+                                },
+                                    child: Text('Okay'))
+                              ],
+                            );
+                          },);
                           //delivered = !delivered;
                         });
 

@@ -338,17 +338,17 @@ class _loginscreenState extends State<loginscreen> {
 
 
 
-              Padding(
-                  padding: const EdgeInsets.only(top : 670, left: 110),
-                  child : ElevatedButton(style: ElevatedButton.styleFrom(shape: const StadiumBorder()),
-                      onPressed: () async{
-                        print('Google Sign in presssed');
-                        //await FirebaseServices().signInWithGoogle();
-
-                      },
-                      child: const Text('Google Sign In')
-                  )
-              ),
+              // Padding(
+              //     padding: const EdgeInsets.only(top : 670, left: 110),
+              //     child : ElevatedButton(style: ElevatedButton.styleFrom(shape: const StadiumBorder()),
+              //         onPressed: () async{
+              //           print('Google Sign in presssed');
+              //           //await FirebaseServices().signInWithGoogle();
+              //
+              //         },
+              //         child: const Text('Google Sign In')
+              //     )
+              // ),
 
 
 
