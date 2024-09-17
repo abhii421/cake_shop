@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:capstone_1/data/all_cake_list.dart';
 import 'package:capstone_1/screens/admin_auth_page.dart';
-import 'package:capstone_1/screens/admin_home_screen.dart';
+import 'package:capstone_1/screens/admin_home_page.dart';
 import 'package:capstone_1/screens/cake_details_screen.dart';
 import 'package:capstone_1/screens/user_profile_screen.dart';
 import 'package:capstone_1/screens/users_orders_page.dart';

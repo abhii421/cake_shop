@@ -317,7 +317,7 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                           side: const BorderSide(style: BorderStyle.none))),),
               ],
             ),
-                SizedBox(height : 10),
+                const SizedBox(height : 10),
             const Divider(height: 2,),
 
             ExpansionTile(

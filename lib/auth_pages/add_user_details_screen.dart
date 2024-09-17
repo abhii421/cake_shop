@@ -57,7 +57,7 @@ class _AddUserDetailsScreenState extends State<AddUserDetailsScreen> {
 
       //await FirebaseAuth.instance.currentUser!.
       if(nameOkay == true && addressOkay == true && numberOkay == true){
-        Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) {
+        Navigator.push(context,  MaterialPageRoute(builder: (context) {
           return homepage();
         },));
       }

@@ -124,7 +124,8 @@ class _OrderConfirmationState extends State<OrderConfirmation> {
 
                 try{
 
-                  await firestore.collection('Cake Orders').add({
+                  await firestore.collection('Cake Orders').add(
+                      {
                     'Order ID' : generateRandomString(10),
                     'Cake Name' : Cakes_List[widget.cakeNameIndex].name.toString(),
                     'Topping Name' : toppingsList[widget.cakeToppingIndex].toppingName.toString(),

@@ -1,4 +1,4 @@
-import 'package:capstone_1/screens/admin_home_screen.dart';
+import 'package:capstone_1/screens/admin_home_page.dart';
 import 'package:capstone_1/screens/homepage.dart';
 import 'package:flutter/material.dart';
 
