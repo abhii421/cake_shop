@@ -1,11 +1,13 @@
 import 'package:capstone_1/data/all_cake_list.dart';
 import 'package:capstone_1/data/all_toppings_list.dart';
 import 'package:capstone_1/screens/order_confirmation_page.dart';
+import 'package:capstone_1/widgets/reviews_page.dart';
 //import 'package:capstone_1/models/cake_model.dart';
 //import 'package:capstone_1/widgets/toppings_containers.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
@@ -297,7 +299,8 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                 //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1),
                 //       side: const BorderSide(style: BorderStyle.none))),),
 
-                TextButton(onPressed: (){
+                /*TextButton(
+                onPressed: (){
 
                   print(FirebaseAuth.instance.currentUser!.uid);
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -310,11 +313,41 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                   //print(Fire)
                 },
                   child: const Text('                Buy Now                  ', style: const TextStyle(color: Colors.white, fontSize: 18),),
-                  style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
+                  style: TextButton.styleFrom( backgroundColor: Colors.black,elevation: 10,
 
                       padding:  EdgeInsets.symmetric(horizontal: deviceWidth*0.150, vertical: 18),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(style: BorderStyle.none))),),
+                          side: const BorderSide(style: BorderStyle.none))),),*/
+
+
+                InkWell(
+                  onTap: (){
+
+                    print(FirebaseAuth.instance.currentUser!.uid);
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                      return OrderConfirmation(totalPrice: returnFinalPrice(widget.index1,cakeWeight,cakeToppingPrice),
+                        cakeToppingIndex: cakeToppingIndexforPassingToOrderConfirmationPage,
+                        cakeSize: cakeWeight,
+                        cakeNameIndex: widget.index1,
+                      );
+                    },));
+                    //print(Fire)
+                  },
+
+                  child: Container(
+                    width: deviceWidth*0.85,
+                    height: deviceHeight*0.08,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), /*Color.fromARGB(255, 178, 154, 211),*/ Colors.purpleAccent.shade100.withOpacity(0.6)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      //color: Colors.purpleAccent.shade100.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: const Center(child: Text('                Buy Now                  ', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),)),
+                             ),
+                  ),
               ],
             ),
                 const SizedBox(height : 10),
@@ -337,51 +370,116 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
             const SizedBox(height: 20,),
 
 
-            // Padding(
-            //   padding: const EdgeInsets.all(15.0),
-            //   child: Row(
-            //     children: [
-            //       const SizedBox(width: 2,),
-            //       Text('Customer Reviews', style: TextStyle(fontSize: 20),textAlign: TextAlign.left),
-            //       SizedBox(width: 25,),
-            //       OutlinedButton(onPressed: (){
-            //
-            //       },
-            //           child: Text('Give Ratings', style: TextStyle(fontWeight: FontWeight.bold),),
-            //          style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
-            //       )
-            //     ],
-            //   ),
-            // ),
-            //
-            //
-            //   Row(
-            //     //mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       Padding(
-            //         padding: EdgeInsets.all(0.034*deviceWidth),
-            //         child: Container(
-            //           width: 0.4*deviceWidth,
-            //           height: 0.2*deviceHeight,
-            //           decoration: BoxDecoration(border: Border.all(width: 0.5)),
-            //         ),
-            //       ),
-            //
-            //       Container(height: 0.17*deviceHeight, width: 0.5,color :Colors.grey),
-            //
-            //       Padding(
-            //         padding: EdgeInsets.all(0.034*deviceWidth),
-            //         child: Container(
-            //           width: 0.46*deviceWidth,
-            //           height: 0.2*deviceHeight,
-            //           decoration: BoxDecoration(border: Border.all(width: 0.5)),
-            //         ),
-            //       )
-            //     ],
-            //   ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Row(
+                children: [
+                  const SizedBox(width: 2,),
+                  Text('Customer Reviews', style: TextStyle(fontSize: 20),textAlign: TextAlign.left),
+                  SizedBox(width: 25,),
+                  OutlinedButton(
+                    onPressed: (){
+                      showModalBottomSheet(
+                        context: context, builder: (context) {
+
+                          return Container(
+                            height: 240,
+                            width: deviceWidth,
+                            //color: Colors.blue,
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 45,),
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Container(
+                                    width: deviceWidth*0.9,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        gradient: const LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10)
+                                    ),
+                                    child: const Center(child: Text('Upload from Gallery', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),)),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Container(
+                                    width: deviceWidth*0.9,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        gradient: const LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10)
+                                    ),
+                                    child: const Center(child: Text('Upload using Camera', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),)),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                      },
+                      );
+                      //final picture = ImagePicker().pickImage(source: ImageSource.)
+                    },
+                    style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
+                    child: const Text('Give Ratings', style: TextStyle(fontWeight: FontWeight.bold),),
+                  )
+                ],
+              ),
+            ),
+
+
+              Row(
+                //mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(0.034*deviceWidth),
+                    child: Container(
+                      width: 0.4*deviceWidth,
+                      height: 0.2*deviceHeight,
+                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
+                    ),
+                  ),
+
+                  Container(height: 0.17*deviceHeight, width: 0.5,color :Colors.grey),
+
+                  Padding(
+                    padding: EdgeInsets.all(0.034*deviceWidth),
+                    child: Container(
+                      width: 0.46*deviceWidth,
+                      height: 0.2*deviceHeight,
+                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
+                    ),
+                  )
+                ],
+              ),
 
               //padding: EdgeInsets.all(20),
-
+            InkWell(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    SizedBox(width: 10,),
+                    Text('See All Reviews', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),),
+                    Spacer(),
+                    Icon(Icons.chevron_right),
+                    SizedBox(width: 11,),
+                  ],
+                ),
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                  return ReviewsPage();
+                },
+                ));
+              },
+            )
           ],
         ),
       )
