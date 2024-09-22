@@ -1,5 +1,9 @@
 import 'package:capstone_1/screens/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+int? userNum;
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -10,7 +14,43 @@ class UserProfilePage extends StatefulWidget {
   State<UserProfilePage> createState() => _UserProfilePageState();
 }
 
+
+
 class _UserProfilePageState extends State<UserProfilePage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserData();
+  }
+
+
+  Future<void> getUserData() async{
+
+    final userUID = FirebaseAuth.instance.currentUser!.uid;
+
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('Cake Customers').where('User UID', isEqualTo: userUID).get()
+        .then((snapshot) => snapshot.docs.first);
+
+
+    if(userDoc.exists){
+      setState(() {
+        var data = userDoc.data() as Map<String, dynamic>;
+        userkaName = data['Name'] as String;
+        userkaAddress = data['Address'] as String;
+        userNum = data['Phone Number'];
+        print(data);
+        print(userNum);
+      });
+
+
+    }
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,9 +66,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
               Card(child: ListTile(leading: const Text('Name'),trailing: Text(userkaName.toString()),)),
               const SizedBox(height : 20),
-              Card(child: ListTile(trailing: Text(userkaPhoneNumber.toString()),leading: const Text('Phone Number'),)),
+              Card(child: ListTile(leading: const Text('Phone Number'),trailing: Text(userNum.toString()),)),
               const SizedBox(height : 20),
-              Card(child: ListTile(leading: const Text('Address'),trailing: Text(userkaAddress.toString()),))
+              Card(child: ListTile(leading: const Text('Address'),trailing: Text(userkaAddress.toString()),)),
+              // ElevatedButton(onPressed: (){
+              //   getUserData();
+              // }, child: Text('get user data')),
             ],
           ),
         ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:math';
+import 'package:capstone_1/screens/user_profile_screen.dart';
 
 
 class OrderConfirmation extends StatefulWidget {
@@ -103,7 +104,7 @@ class _OrderConfirmationState extends State<OrderConfirmation> {
                 padding: const EdgeInsets.all(8),
                 child: Card(
 
-                    child: ListTile(leading: Text('Phone Number'),trailing: Text(userkaPhoneNumber.toString()))),
+                    child: ListTile(leading: Text('Phone Number'),trailing: Text(userNum.toString()))),
               ),
               
               Padding(
@@ -132,7 +133,7 @@ class _OrderConfirmationState extends State<OrderConfirmation> {
                     'Cake Price' : widget.totalPrice.toString(),
                     'Cake Weight (in pounds)' : widget.cakeSize.toString(),
                     'Customer UID' : userkaUID,
-                    'Customer Phone Number' : userkaPhoneNumber,
+                    'Customer Phone Number' : userNum,
                     'Delivery Address' : userkaAddress,
                     'Customer Name' : userkaName,
                     'Order Accepted' : false,

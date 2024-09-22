@@ -1,16 +1,16 @@
+//import 'package:capstone_1/models/cake_model.dart';
+//import 'package:capstone_1/widgets/toppings_containers.dart';
 import 'package:capstone_1/data/all_cake_list.dart';
 import 'package:capstone_1/data/all_toppings_list.dart';
 import 'package:capstone_1/screens/order_confirmation_page.dart';
+import 'package:capstone_1/screens/review_pics_page.dart';
 import 'package:capstone_1/widgets/reviews_page.dart';
-//import 'package:capstone_1/models/cake_model.dart';
-//import 'package:capstone_1/widgets/toppings_containers.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-
+import 'dart:io';
 
 
 
@@ -18,6 +18,7 @@ class CakeDetailsScreen extends StatefulWidget {
   const CakeDetailsScreen({super.key, required this.index1});
 
   final int index1;
+
 
   @override
   State<CakeDetailsScreen> createState() => _CakeDetailsScreenState();
@@ -42,6 +43,10 @@ String convertToString (List ingredientList){
     newString = newString + item + '\n';
   }
   return newString;
+}
+
+int returnone(){
+  return 1;
 }
 
 
@@ -79,7 +84,7 @@ double returnFinalPrice(int index, double cakeSize, double cakeToppingDaam){
   if(index == 3){
     Final_Price = 500 + (finalWeightDifference*600)+cakeToppingDaam;
   }
-  print(Final_Price);
+   //print(Final_Price);
   return Final_Price;
 }
 
@@ -92,6 +97,98 @@ double returnFinalPrice(int index, double cakeSize, double cakeToppingDaam){
 class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+
+    XFile? pickedImage;
+    XFile? clickedImage;
+    ImagePicker picker = ImagePicker();
+    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+
+    Future <void> pickFromGallery () async{
+
+      final pickedImg = await picker.pickImage(source: ImageSource.gallery);
+      print(pickedImg?.path);
+
+      try{
+
+
+        if(pickedImg!=null){
+          setState(() {
+            pickedImage = pickedImg;
+          });
+
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ReviewPicsPage(myFile: pickedImage!, currentCakeName: Cakes_List[widget.index1].name,);
+          },));
+
+          print('picked image is not null');
+          print(pickedImg.path);
+          print(pickedImage?.path);
+
+        }
+
+        else if(pickedImg == null){
+          print('picked one is null');
+          return;
+        }
+        else{
+          print('no img selected');
+        }
+
+
+      } catch(err) {
+        print('Error occurred in picked gallery image -- try catch block');
+        print(err);
+
+      }
+    }
+
+
+
+
+
+
+
+    Future <void> clickFromCam () async{
+      final clickedImg = await picker.pickImage(source: ImageSource.camera);
+
+
+      try {
+        if (clickedImg != null) {
+          setState(() {
+            //clickedImage = File(clickedImg.path);
+
+            clickedImage =
+                clickedImg; //-- in case we change the data type of clickedImage from File to XFile
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return ReviewPicsPage(myFile: clickedImage!, currentCakeName: Cakes_List[widget.index1].name);
+            },));
+
+            print('picked image is not null');
+            print(clickedImg.path);
+            print(clickedImage?.path);
+          });
+        }
+
+        else if (clickedImg == null) {
+          print('picked one is null');
+          return;
+        }
+        else {
+          print('no img selected');
+        }
+      }  catch(err) {
+        print('Error occurred in Clicked Image -- try catch block');
+        print(err);
+
+      }
+
+
+    }
+
+
+
 
 
     int returnIndexOfNextCake(index){
@@ -119,209 +216,213 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
 
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 70),
-            CarouselSlider(items: [
-              Image.asset(Cakes_List[widget.index1].imgPath,fit: BoxFit.contain, width : deviceWidth,),
-              Container(color: Colors.lime, child : const Center(child: Text('Another image added to test sliding carousel'))),
-              Image.asset(Cakes_List[returnIndexOfNextCake(widget.index1)].imgPath,fit: BoxFit.contain),
-            ],
-                options: CarouselOptions(
-                    animateToClosest: true,
-                    autoPlay: true,
-                    autoPlayAnimationDuration: const Duration(milliseconds: 550),
-                    autoPlayCurve: Curves.elasticOut,
-                    autoPlayInterval: const Duration(seconds: 6),
-                    viewportFraction: 1.0,
-                )
-            ),
+        //backgroundColor: Color(0x33E1BEE7),
 
-            const SizedBox(height: 15,),
+        //Colors.purpleAccent.shade100.withAlpha()/*.withOpacity(0.2)*/,
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [/*Colors.purpleAccent.shade100.withOpacity(0.1)*/  Color(0x33E1BEE7), Colors.white/*Colors.lightBlueAccent.shade100.withOpacity(0.01)*/],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            )
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 70),
+              // CarouselSlider(items: [
+              //   Image.asset(Cakes_List[widget.index1].imgPath,fit: BoxFit.contain, width : deviceWidth,),
+              //   Container(color: Colors.lime, child : const Center(child: Text('Another image added to test sliding carousel'))),
+              //   Image.asset(Cakes_List[returnIndexOfNextCake(widget.index1)].imgPath,fit: BoxFit.contain),
+              // ],
+              //     options: CarouselOptions(
+              //         animateToClosest: true,
+              //         autoPlay: true,
+              //         autoPlayAnimationDuration: const Duration(milliseconds: 550),
+              //         autoPlayCurve: Curves.elasticOut,
+              //         autoPlayInterval: const Duration(seconds: 6),
+              //         viewportFraction: 1.0,
+              //     )
+              // ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18,),
-              child: Container(
-                alignment: Alignment.topLeft,
-                  child: Text(Cakes_List[widget.index1].name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold, ),textAlign: TextAlign.start)
-              ),
-            ),
+              SizedBox(
+                height: 250,
+                child: CarouselView(itemExtent: deviceWidth,
 
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10, top: 8),
-              child: Text(Cakes_List[widget.index1].description, style: const TextStyle(fontSize: 15),),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    OutlinedButton(onPressed: (){
-                      setState(() {
-                        cakeWeight = 0.5;
-                      });
-                    }, child: Text('0.5 Pound',  style: TextStyle(fontWeight: cakeWeight == 0.5 ? FontWeight.bold : FontWeight.w100),)),
-
-                    const SizedBox(width: 15,),
-
-                    OutlinedButton(onPressed: (){
-                      setState(() {
-                        cakeWeight = 1;
-                      });
-
-                      },
-                      child: Text('1 Pound', style: TextStyle(fontWeight: cakeWeight == 1 ? FontWeight.bold : FontWeight.w100),)),
-
-                    const SizedBox(width: 20,),
-
-                    OutlinedButton(onPressed: (){
-                      setState(() {
-                        cakeWeight = 1.5;
-                        });
-                      }, child: Text('1.5 Pound', style: TextStyle(fontWeight: cakeWeight == 1.5 ? FontWeight.bold : FontWeight.w100),)),
-
-                    const SizedBox(width: 20,),
-
-                    OutlinedButton(onPressed: (){
-                      setState(() {
-                        cakeWeight = 2.0;
-                      });
-                      },
-                        child: Text('2.0 Pounds', style: TextStyle(fontWeight: cakeWeight == 2.0 ? FontWeight.bold : FontWeight.w100),)),
-
-                    const SizedBox(width: 10,),
+                    children: [
+                    Image.asset(Cakes_List[widget.index1].imgPath,fit: BoxFit.contain, width : deviceWidth,),
+                    //Container(color: Colors.lime, child : const Center(child: Text('Another image added to test sliding carousel'))),
+                    Image.asset(Cakes_List[returnIndexOfNextCake(widget.index1)].imgPath,fit: BoxFit.contain),
                   ],
+
+                  controller: CarouselController(initialItem: 0),
                 ),
               ),
-            ),
+
+              const SizedBox(height: 15,),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18,),
+                child: Container(
+                  alignment: Alignment.topLeft,
+                    child: Text(Cakes_List[widget.index1].name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold, ),textAlign: TextAlign.start)
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10, top: 8),
+                child: Text(Cakes_List[widget.index1].description, style: const TextStyle(fontSize: 15),),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      OutlinedButton(onPressed: (){
+                        setState(() {
+                          cakeWeight = 0.5;
+                        });
+                      }, child: Text('0.5 Pound',  style: TextStyle(fontWeight: cakeWeight == 0.5 ? FontWeight.bold : FontWeight.w100),)),
+
+                      const SizedBox(width: 15,),
+
+                      OutlinedButton(onPressed: (){
+                        setState(() {
+                          cakeWeight = 1;
+                        });
+
+                        },
+                        child: Text('1 Pound', style: TextStyle(fontWeight: cakeWeight == 1 ? FontWeight.bold : FontWeight.w100),)),
+
+                      const SizedBox(width: 20,),
+
+                      OutlinedButton(onPressed: (){
+                        setState(() {
+                          cakeWeight = 1.5;
+                          });
+                        }, child: Text('1.5 Pound', style: TextStyle(fontWeight: cakeWeight == 1.5 ? FontWeight.bold : FontWeight.w100),)),
+
+                      const SizedBox(width: 20,),
+
+                      OutlinedButton(onPressed: (){
+                        setState(() {
+                          cakeWeight = 2.0;
+                        });
+                        },
+                          child: Text('2.0 Pounds', style: TextStyle(fontWeight: cakeWeight == 2.0 ? FontWeight.bold : FontWeight.w100),)),
+
+                      const SizedBox(width: 10,),
+                    ],
+                  ),
+                ),
+              ),
 
 
-            Divider(thickness: 3, color: Colors.grey.shade200,),
+              Divider(thickness: 3, color: Colors.grey.shade200,),
 
 
-            Row(
-              children: [
-                const SizedBox(width: 15,),
-                const Text('₹', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-                const SizedBox(width: 7,),
-                Text(
-                  returnFinalPrice(widget.index1,cakeWeight,cakeToppingPrice).toString(),
-                  style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
+              Row(
+                children: [
+                  const SizedBox(width: 15,),
+                  const Text('₹', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                  const SizedBox(width: 7,),
+                  Text(
+                    returnFinalPrice(widget.index1,cakeWeight,cakeToppingPrice).toString(),
+                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
 
-            const Text('Toppings',  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),),
-
-
-
+              const Text('Toppings',  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),),
 
 
 
-            Container(
-              width : deviceWidth,
-              height: deviceHeight/4.3,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: toppingsList.length,
 
-                itemBuilder: (context, index2) {
-                return Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: InkWell(
-                    child: Container(
-                      height: deviceHeight/4.7,
-                      width: deviceWidth*0.36,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(17),
-                        border: Border.all(color: Colors.black,width: vary == index2 ? 3 : 1 ),
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: deviceWidth*0.38,
-                            height: deviceHeight/7,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(topRight: Radius.circular(15),topLeft: Radius.circular(15),bottomRight: Radius.elliptical(25, 25),bottomLeft: Radius.elliptical(25, 25) ),
-                              child: Image.network(toppingsList[index2].imageNetworkAddress,
-                                  fit: BoxFit.fill
+
+
+              Container(
+                width : deviceWidth,
+                height: deviceHeight/4.3,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: toppingsList.length,
+
+                  itemBuilder: (context, index2) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: InkWell(
+                      child: Container(
+                        height: deviceHeight/4.7,
+                        width: deviceWidth*0.36,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(17),
+                          border: Border.all(color: Colors.purpleAccent.shade100.withOpacity(0.6),width: vary == index2 ? 3 : 0.1 ),
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: deviceWidth*0.38,
+                              height: deviceHeight/7,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(topRight: Radius.circular(15),topLeft: Radius.circular(15),bottomRight: Radius.elliptical(25, 25),bottomLeft: Radius.elliptical(25, 25) ),
+                                child: Image.network(toppingsList[index2].imageNetworkAddress,
+                                    fit: BoxFit.fill
+                                ),
                               ),
                             ),
-                          ),
-                          Text(toppingsList[index2].toppingName, style: const TextStyle(fontWeight: FontWeight.w600),),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text('₹'),
-                              const SizedBox(width: 4),
-                              Text(toppingsList[index2].price.toString(), style: const TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          )
-                        ],
+                            Text(toppingsList[index2].toppingName, style: const TextStyle(fontWeight: FontWeight.w600),),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text('₹'),
+                                const SizedBox(width: 4),
+                                Text(toppingsList[index2].price.toString(), style: const TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
+
+
+
+                      onTap: (){
+
+                        print(index2);
+                        print(toppingsList[index2].toppingName);
+                        print(toppingsList[index2].price);
+                        setState(() {
+                          cakeToppingPrice = toppingsList[index2].price.toDouble();
+                          vary = index2;
+                          cakeToppingIndexforPassingToOrderConfirmationPage = index2;
+
+                        });
+
+                      },
                     ),
-
-
-
-                    onTap: (){
-
-                      print(index2);
-                      print(toppingsList[index2].toppingName);
-                      print(toppingsList[index2].price);
-                      setState(() {
-                        cakeToppingPrice = toppingsList[index2].price.toDouble();
-                        vary = index2;
-                        cakeToppingIndexforPassingToOrderConfirmationPage = index2;
-
-                      });
-
-                    },
-                  ),
-                );
-                  //ToppingsContainer(indexOfToppingsList: index2, indexOfCakeList: widget.index1, weightOfCake: cakeWeight, onToppingSelected : updateToppingCost(toppingsList[index2].price.toDouble()));
-                },
+                  );
+                    //ToppingsContainer(indexOfToppingsList: index2, indexOfCakeList: widget.index1, weightOfCake: cakeWeight, onToppingSelected : updateToppingCost(toppingsList[index2].price.toDouble()));
+                  },
+                ),
               ),
-            ),
 
-            SizedBox(height: 15,),
+              const SizedBox(height: 15,),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                // TextButton(
-                //   onPressed: (){},
-                //   child: const Text('Add to Cart', style: TextStyle(color: Colors.white, fontSize: 18),),
-                //   style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
-                //       padding: EdgeInsets.symmetric(horizontal: deviceWidth*0.115, vertical: 18),
-                //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1),
-                //       side: const BorderSide(style: BorderStyle.none))),),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // TextButton(
+                  //   onPressed: (){},
+                  //   child: const Text('Add to Cart', style: TextStyle(color: Colors.white, fontSize: 18),),
+                  //   style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
+                  //       padding: EdgeInsets.symmetric(horizontal: deviceWidth*0.115, vertical: 18),
+                  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1),
+                  //       side: const BorderSide(style: BorderStyle.none))),),
 
-                /*TextButton(
-                onPressed: (){
-
-                  print(FirebaseAuth.instance.currentUser!.uid);
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                    return OrderConfirmation(totalPrice: returnFinalPrice(widget.index1,cakeWeight,cakeToppingPrice),
-                      cakeToppingIndex: cakeToppingIndexforPassingToOrderConfirmationPage,
-                      cakeSize: cakeWeight,
-                      cakeNameIndex: widget.index1,
-                    );
-                  },));
-                  //print(Fire)
-                },
-                  child: const Text('                Buy Now                  ', style: const TextStyle(color: Colors.white, fontSize: 18),),
-                  style: TextButton.styleFrom( backgroundColor: Colors.black,elevation: 10,
-
-                      padding:  EdgeInsets.symmetric(horizontal: deviceWidth*0.150, vertical: 18),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(style: BorderStyle.none))),),*/
-
-
-                InkWell(
-                  onTap: (){
+                  /*TextButton(
+                  onPressed: (){
 
                     print(FirebaseAuth.instance.currentUser!.uid);
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -333,154 +434,225 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                     },));
                     //print(Fire)
                   },
+                    child: const Text('                Buy Now                  ', style: const TextStyle(color: Colors.white, fontSize: 18),),
+                    style: TextButton.styleFrom( backgroundColor: Colors.black,elevation: 10,
 
-                  child: Container(
-                    width: deviceWidth*0.85,
-                    height: deviceHeight*0.08,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), /*Color.fromARGB(255, 178, 154, 211),*/ Colors.purpleAccent.shade100.withOpacity(0.6)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      //color: Colors.purpleAccent.shade100.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: const Center(child: Text('                Buy Now                  ', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),)),
-                             ),
-                  ),
-              ],
-            ),
-                const SizedBox(height : 10),
-            const Divider(height: 2,),
-
-            ExpansionTile(
-              // shape: ShapeBorder(),
-              title: const Text('Product Ingredients', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 230),
-                  child: Text(convertToString(Cakes_List[widget.index1].ingredients), style: const TextStyle(color: Colors.black),textAlign: TextAlign.left,),
-                )
-              ],
-            ),
-
-            const Divider(height: 10),
+                        padding:  EdgeInsets.symmetric(horizontal: deviceWidth*0.150, vertical: 18),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),
+                            side: const BorderSide(style: BorderStyle.none))),),*/
 
 
-            const SizedBox(height: 20,),
+                  InkWell(
+                    onTap: (){
 
-
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Row(
-                children: [
-                  const SizedBox(width: 2,),
-                  Text('Customer Reviews', style: TextStyle(fontSize: 20),textAlign: TextAlign.left),
-                  SizedBox(width: 25,),
-                  OutlinedButton(
-                    onPressed: (){
-                      showModalBottomSheet(
-                        context: context, builder: (context) {
-
-                          return Container(
-                            height: 240,
-                            width: deviceWidth,
-                            //color: Colors.blue,
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 45,),
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Container(
-                                    width: deviceWidth*0.9,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        gradient: const LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10)
-                                    ),
-                                    child: const Center(child: Text('Upload from Gallery', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),)),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Container(
-                                    width: deviceWidth*0.9,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        gradient: const LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10)
-                                    ),
-                                    child: const Center(child: Text('Upload using Camera', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                      },
-                      );
-                      //final picture = ImagePicker().pickImage(source: ImageSource.)
+                      print(FirebaseAuth.instance.currentUser!.uid);
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                        return OrderConfirmation(totalPrice: returnFinalPrice(widget.index1,cakeWeight,cakeToppingPrice),
+                          cakeToppingIndex: cakeToppingIndexforPassingToOrderConfirmationPage,
+                          cakeSize: cakeWeight,
+                          cakeNameIndex: widget.index1,
+                        );
+                      },));
+                      //print(Fire)
                     },
-                    style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
-                    child: const Text('Give Ratings', style: TextStyle(fontWeight: FontWeight.bold),),
-                  )
+
+                    child: Container(
+                      width: deviceWidth*0.9,
+                      height: deviceHeight*0.08,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176),
+                            /*Color.fromARGB(255, 178, 154, 211),*/ Colors.purpleAccent.shade100.withOpacity(0.6)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        //color: Colors.purpleAccent.shade100.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(14)
+                      ),
+                      child: const Center(
+                          child: Text('                Buy Now                  ',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 23,
+                                fontWeight: FontWeight.bold),)),
+                               ),
+                    ),
                 ],
               ),
-            ),
+                  const SizedBox(height : 10),
+              const Divider(height: 2,),
 
-
-              Row(
-                //mainAxisAlignment: MainAxisAlignment.center,
+              ExpansionTile(
+                // shape: ShapeBorder(),
+                title: const Text('Product Ingredients', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),),
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(0.034*deviceWidth),
-                    child: Container(
-                      width: 0.4*deviceWidth,
-                      height: 0.2*deviceHeight,
-                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
-                    ),
-                  ),
-
-                  Container(height: 0.17*deviceHeight, width: 0.5,color :Colors.grey),
-
-                  Padding(
-                    padding: EdgeInsets.all(0.034*deviceWidth),
-                    child: Container(
-                      width: 0.46*deviceWidth,
-                      height: 0.2*deviceHeight,
-                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
-                    ),
+                    padding: const EdgeInsets.only(right: 230),
+                    child: Text(convertToString(Cakes_List[widget.index1].ingredients), style: const TextStyle(color: Colors.black),textAlign: TextAlign.left,),
                   )
                 ],
               ),
 
-              //padding: EdgeInsets.all(20),
-            InkWell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Divider(height: 10),
+
+
+              const SizedBox(height: 20,),
+
+
+              Padding(
+                padding: const EdgeInsets.all(15.0),
                 child: Row(
                   children: [
-                    SizedBox(width: 10,),
-                    Text('See All Reviews', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),),
-                    Spacer(),
-                    Icon(Icons.chevron_right),
-                    SizedBox(width: 11,),
+                    const SizedBox(width: 2,),
+                    Text('Customer Reviews', style: TextStyle(fontSize: 20),textAlign: TextAlign.left),
+                    SizedBox(width: 25,),
+                    OutlinedButton(
+                      onPressed: (){
+                        showModalBottomSheet(
+                          context: context, builder: (context) {
+
+                            return Container(
+                              height: 240,
+                              width: deviceWidth,
+                              //color: Colors.blue,
+                              child: Column(
+                                children: [
+
+                                  const SizedBox(height: 45,),
+
+                                  InkWell(
+                                    onTap: (){
+                                      Navigator.of(context).pop();
+                                       pickFromGallery();
+                                      //final galleryPicture = ImagePicker().pickImage(source: ImageSource.gallery);
+
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Container(
+                                        width: deviceWidth*0.9,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            gradient: const LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                            borderRadius: BorderRadius.circular(10)
+                                        ),
+                                        child: const Center(child: Text('Upload from Gallery', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),)),
+                                      ),
+                                    ),
+                                  ),
+
+
+                                  InkWell(
+                                    onTap: (){
+                                      clickFromCam();
+                                      //final camPicture = ImagePicker().pickImage(source: ImageSource.camera);
+                                    },
+
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Container(
+                                        width: deviceWidth*0.9,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            gradient: const LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                            borderRadius: BorderRadius.circular(10)
+                                        ),
+                                        child: const Center(child: Text('Upload using Camera', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),)),
+                                      ),
+                                    ),
+                                  ),
+                                  // ElevatedButton(onPressed: (){
+                                  //   clickFromCam();
+                                  // },
+                                  //     child: Text('cam')),
+                                  //
+                                  // ElevatedButton(onPressed: (){
+                                  //   pickFromGallery();
+                                  // },
+                                  //     child: Text('gallery')),
+
+                                ],
+                              ),
+                            );
+                        },
+                        );
+
+                      },
+                      style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
+                      child: const Text('Give Ratings', style: TextStyle(fontWeight: FontWeight.bold),),
+                    )
                   ],
                 ),
               ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return ReviewsPage();
+
+
+                Row(
+                  //mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(0.034*deviceWidth),
+                      child: Container(
+                        width: 0.4*deviceWidth,
+                        height: 0.2*deviceHeight,
+                        decoration: BoxDecoration(border: Border.all(width: 0.5)),
+                      ),
+                    ),
+
+                    Container(height: 0.17*deviceHeight, width: 0.5,color :Colors.grey),
+
+                    Padding(
+                      padding: EdgeInsets.all(0.034*deviceWidth),
+                      child: Container(
+                        width: 0.46*deviceWidth,
+                        height: 0.2*deviceHeight,
+                        decoration: BoxDecoration(border: Border.all(width: 0.5),
+                        color:  Color(0x33E1BEE7)
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+
+                //padding: EdgeInsets.all(20),
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 10,),
+                      Text('See All Reviews', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),),
+                      Spacer(),
+                      Icon(Icons.chevron_right),
+                      SizedBox(width: 11,),
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    return ReviewsPage();
+                  },
+                  ));
                 },
-                ));
-              },
-            )
-          ],
+              ),
+
+              // ElevatedButton(onPressed: (){
+              //   pickFromGallery();
+              // },
+              //     child: Text('Upload from Gallery')),
+              // Container(
+              //   key: UniqueKey(),
+              //   child: pickedImage!=null ? Image.file(File(pickedImage!.path)) : Text('No image selected'),
+              //
+              // ),
+              // Container(
+              //   //child: clickedImage!=null ? Image.file(clickedImage!) : const Text('No Image clicked'),
+              // ),
+            ],
+          ),
         ),
       )
     );

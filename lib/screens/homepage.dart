@@ -41,8 +41,7 @@ class _homepageState extends State<homepage> {
 
     final userUID = FirebaseAuth.instance.currentUser!.uid;
 
-    final DocumentSnapshot userDoc =
-      await FirebaseFirestore.instance.collection('Cake Customers').where('User UID', isEqualTo: userUID).get()
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('Cake Customers').where('User UID', isEqualTo: userUID).get()
       .then((snapshot) => snapshot.docs.first);
 
 
