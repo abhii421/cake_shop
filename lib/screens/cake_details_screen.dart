@@ -506,6 +506,8 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                     SizedBox(width: 25,),
                     OutlinedButton(
                       onPressed: (){
+                        
+
                         showModalBottomSheet(
                           context: context, builder: (context) {
 
@@ -516,7 +518,10 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                               child: Column(
                                 children: [
 
-                                  const SizedBox(height: 45,),
+                                  const SizedBox(height: 15,),
+                                  //SizedBox(height: 10,),
+
+
 
                                   InkWell(
                                     onTap: (){
