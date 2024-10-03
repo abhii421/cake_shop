@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
             builder : (ctx, snapshot){
 
               if (snapshot.connectionState == ConnectionState.waiting){
-                print('Waiting at the moment');
+                //print('Waiting at the moment');
                 return Center(
                     child: CircularProgressIndicator()
                 );
@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
 
               if(snapshot.hasData){
-                print('loggedin hai');
+                //print('loggedin hai');
                 return homepage();
               }
 

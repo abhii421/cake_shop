@@ -22,8 +22,8 @@ bool nameOkay = false;
 bool addressOkay = false;
 bool numberOkay = false;
 
-final firestore = FirebaseFirestore.instance;
-final firebase = FirebaseAuth.instance;
+final _firestore = FirebaseFirestore.instance;
+final _firebase = FirebaseAuth.instance;
 
 
 class _AddUserDetailsScreenState extends State<AddUserDetailsScreen> {
@@ -46,9 +46,9 @@ class _AddUserDetailsScreenState extends State<AddUserDetailsScreen> {
 
 
       _userDetailsFormKey.currentState!.save();
-      String userUID = firebase.currentUser!.uid;
+      String userUID = _firebase.currentUser!.uid;
 
-      await firestore.collection('Cake Customers').add({
+      await _firestore.collection('Cake Customers').add({
         'Name' : userName,
         'Address' : userAddress,
         'Phone Number' : userNum,

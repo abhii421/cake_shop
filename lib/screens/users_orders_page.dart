@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-final firestore = FirebaseFirestore.instance;
-final firebase = FirebaseAuth.instance;
-
 
 class UsersOrdersPage extends StatefulWidget {
   const UsersOrdersPage({super.key});
@@ -66,6 +63,8 @@ class _UsersOrdersPageState extends State<UsersOrdersPage> {
           ),
         ],
       ),
+
+
       body: Container(
         child: ListView.builder(
           itemCount: cakeOrders.length,

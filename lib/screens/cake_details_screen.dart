@@ -2,8 +2,10 @@
 //import 'package:capstone_1/widgets/toppings_containers.dart';
 import 'package:capstone_1/data/all_cake_list.dart';
 import 'package:capstone_1/data/all_toppings_list.dart';
+import 'package:capstone_1/screens/homepage.dart';
 import 'package:capstone_1/screens/order_confirmation_page.dart';
 import 'package:capstone_1/screens/review_pics_page.dart';
+import 'package:capstone_1/widgets/rating_box.dart';
 import 'package:capstone_1/widgets/reviews_page.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
+
+bool userReviewAllow = true;
+double avgCakeRating = 4;
+LinearGradient ratingGradient =  LinearGradient(colors: [Color(0xFF43A047), Color(0xFFAED581)], begin: Alignment.bottomRight, end: Alignment.topLeft);
 
 
 
@@ -89,20 +95,109 @@ double returnFinalPrice(int index, double cakeSize, double cakeToppingDaam){
 }
 
 
-
-
-
-
+//List myCakeOrders = [];
 
 class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
+
+  @override
+  void initState() {
+
+    checkUserReviewAllow();
+    returnCakeAvgRating();
+
+
+    super.initState();
+  }
+
+  Future <void> checkUserReviewAllow() async{
+
+    userReviewAllow = true;
+
+    print('***********    Entered checkUserAllow Function **********************');
+
+
+    try{
+      print('entered try block');
+      final QuerySnapshot querySnapshot1 =
+      await FirebaseFirestore.instance.collection('Cake Orders').where('Customer UID', isEqualTo: userkaUID).where('Cake Name', isEqualTo : Cakes_List[widget.index1].name).get();
+
+
+
+      // setState(() {
+      //   myCakeOrders = querySnapshot1.docs;
+      // });
+
+      //print(myCakeOrders.length);
+
+      print(querySnapshot1.size);
+
+      if(querySnapshot1.size>0){
+        userReviewAllow = true;
+      }
+
+      else if(querySnapshot1.size == 0){
+        setState(() {
+          userReviewAllow = false;
+        });
+
+        print('user Review permission has changed');
+      }
+    }
+    catch(error)
+    {
+      print('*****');
+      print(error.toString());
+      print('#######');
+    }
+
+
+    print(userReviewAllow);
+
+  }
+
+
+  Future<void> returnCakeAvgRating() async {
+    final DocumentSnapshot<Map<String, dynamic>> cakeDoc = await FirebaseFirestore.instance
+        .collection('Cake Reviews').doc(
+        Cakes_List[widget.index1].name.toString()).get();
+
+    setState(() {
+      avgCakeRating = cakeDoc['Average Rating'];
+      print(avgCakeRating.toString());
+    });
+
+
+    if(avgCakeRating >=4){
+      setState(() {
+        ratingGradient = LinearGradient(colors: [Color(0xFF43A047), Color(0xFFAED581)], begin: Alignment.bottomRight, end: Alignment.topLeft);
+      });
+    }
+
+    if(avgCakeRating < 4 && avgCakeRating >= 3){
+      setState(() {
+        ratingGradient = LinearGradient(colors: [/*Color(0xFFFEC163),*/   Color(0xFFDE4313), Colors.yellow,], begin: Alignment.topLeft, end: Alignment.bottomRight);
+      });
+
+    }
+
+    if(avgCakeRating < 3){
+      setState(() {
+        ratingGradient = LinearGradient(colors: [Color(0xFFFEB692), Color(0xFFEA5455)]);
+      });
+    }
+
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
 
     XFile? pickedImage;
     XFile? clickedImage;
     ImagePicker picker = ImagePicker();
-    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
     Future <void> pickFromGallery () async{
@@ -191,6 +286,8 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
 
 
 
+
+
     int returnIndexOfNextCake(index){
       if(index < 6) {
         return index+1;
@@ -211,6 +308,17 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
 
     }
 
+
+
+
+
+    /*******************************************************************************************************/
+
+
+
+
+
+
     var deviceWidth = MediaQuery.of(context).size.width;
     var deviceHeight = MediaQuery.of(context).size.height;
 
@@ -229,6 +337,7 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
         ),
         child: SingleChildScrollView(
           child: Column(
+            //mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(height: 70),
               // CarouselSlider(items: [
@@ -494,141 +603,256 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
               const Divider(height: 10),
 
 
-              const SizedBox(height: 20,),
-
 
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Row(
                   children: [
                     const SizedBox(width: 2,),
-                    Text('Customer Reviews', style: TextStyle(fontSize: 20),textAlign: TextAlign.left),
-                    SizedBox(width: 25,),
+                    const Text('Customer Reviews', style: TextStyle(fontSize: 20),textAlign: TextAlign.left),
+                    const SizedBox(width: 25,),
                     OutlinedButton(
                       onPressed: (){
-                        
-
                         showModalBottomSheet(
                           context: context, builder: (context) {
 
-                            return Container(
-                              height: 240,
-                              width: deviceWidth,
-                              //color: Colors.blue,
-                              child: Column(
-                                children: [
+                            if(userReviewAllow == true){
+                              return SizedBox(
+                                height: 240,
+                                width: deviceWidth,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 15,),
+                                    InkWell(
+                                      onTap: (){
+                                        Navigator.of(context).pop();
+                                        pickFromGallery();
+                                        //final galleryPicture = ImagePicker().pickImage(source: ImageSource.gallery);
 
-                                  const SizedBox(height: 15,),
-                                  //SizedBox(height: 10,),
-
-
-
-                                  InkWell(
-                                    onTap: (){
-                                      Navigator.of(context).pop();
-                                       pickFromGallery();
-                                      //final galleryPicture = ImagePicker().pickImage(source: ImageSource.gallery);
-
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: Container(
-                                        width: deviceWidth*0.9,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                            gradient: const LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius: BorderRadius.circular(10)
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: Container(
+                                          width: deviceWidth*0.9,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              gradient: const LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                              ),
+                                              borderRadius: BorderRadius.circular(10)
+                                          ),
+                                          child: const Center(child: Text('Upload from Gallery', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),)),
                                         ),
-                                        child: const Center(child: Text('Upload from Gallery', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),)),
                                       ),
                                     ),
-                                  ),
+                                    InkWell(
+                                      onTap: (){
+                                        clickFromCam();
+                                        //final camPicture = ImagePicker().pickImage(source: ImageSource.camera);
+                                      },
 
-
-                                  InkWell(
-                                    onTap: (){
-                                      clickFromCam();
-                                      //final camPicture = ImagePicker().pickImage(source: ImageSource.camera);
-                                    },
-
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: Container(
-                                        width: deviceWidth*0.9,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                            gradient: const LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius: BorderRadius.circular(10)
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: Container(
+                                          width: deviceWidth*0.9,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              gradient: const LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                              ),
+                                              borderRadius: BorderRadius.circular(10)
+                                          ),
+                                          child: const Center(child: Text('Upload using Camera', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),)),
                                         ),
-                                        child: const Center(child: Text('Upload using Camera', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),)),
                                       ),
                                     ),
-                                  ),
-                                  // ElevatedButton(onPressed: (){
-                                  //   clickFromCam();
-                                  // },
-                                  //     child: Text('cam')),
-                                  //
-                                  // ElevatedButton(onPressed: (){
-                                  //   pickFromGallery();
-                                  // },
-                                  //     child: Text('gallery')),
+                                  ],
+                                ),
+                              );
+                            }
 
-                                ],
-                              ),
-                            );
+                            else{
+                              return const Center(
+                                child: Text('Please purchase the cake to review it', style: TextStyle(color: Colors.deepPurple, fontSize: 17, fontWeight: FontWeight.bold),),
+                              );
+                            }
                         },
                         );
 
                       },
                       style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
-                      child: const Text('Give Ratings', style: TextStyle(fontWeight: FontWeight.bold),),
+                      child:  Text('Give Ratings', style: TextStyle(fontWeight: FontWeight.bold, color : userReviewAllow == false ? Colors.black12 : Colors.deepPurple),),
                     )
                   ],
                 ),
               ),
 
 
-                Row(
-                  //mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(0.034*deviceWidth),
-                      child: Container(
-                        width: 0.4*deviceWidth,
-                        height: 0.2*deviceHeight,
-                        decoration: BoxDecoration(border: Border.all(width: 0.5)),
-                      ),
-                    ),
+                // Row(
+                //
+                //   children: [
+                //     Padding(
+                //       padding: EdgeInsets.all(0.034*deviceWidth),
+                //       child: Container(
+                //         width: 0.4*deviceWidth,
+                //         height: 0.2*deviceHeight,
+                //         decoration: BoxDecoration(border: Border.all(width: 0.5)),
+                //       ),
+                //     ),
+                //
+                //     Container(height: 0.17*deviceHeight, width: 0.5,color :Colors.grey),
+                //
+                //     Padding(
+                //       padding: EdgeInsets.all(0.034*deviceWidth),
+                //       child: Container(
+                //         width: 0.46*deviceWidth,
+                //         height: 0.2*deviceHeight,
+                //         decoration: BoxDecoration(border: Border.all(width: 0.5),
+                //         color:  const Color(0x33E1BEE7)
+                //         ),
+                //       ),
+                //     )
+                //   ],
+                // ),
 
-                    Container(height: 0.17*deviceHeight, width: 0.5,color :Colors.grey),
+              // Row(
+              //   children: [
+              //     Padding(
+              //       padding: const EdgeInsets.only(left : 20.0, right: 30),
+              //       child: Container(
+              //         height: 40,
+              //         //width: 50,
+              //         decoration: BoxDecoration(color: Colors.lightGreen),
+              //         child: Row(
+              //           children: [
+              //                 // ElevatedButton(onPressed: () {
+              //                 //   returnCakeAvgRating();
+              //                 // }, child: const Text('rating'))
+              //           ],
+              //         ),
+              //       ),
+              //     )
+              //   ],
+              // ),
 
-                    Padding(
-                      padding: EdgeInsets.all(0.034*deviceWidth),
-                      child: Container(
-                        width: 0.46*deviceWidth,
-                        height: 0.2*deviceHeight,
-                        decoration: BoxDecoration(border: Border.all(width: 0.5),
-                        color:  Color(0x33E1BEE7)
+
+
+
+
+              //******************************************************************************************************
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: SizedBox(
+              //       height: 20,
+              //       //color: Colors.orangeAccent,
+              //       child :Row(
+              //         children: [
+              //           const SizedBox(width: 19, ),
+              //           Container(
+              //             decoration: BoxDecoration(color: Colors.green,borderRadius: BorderRadius.circular(7)),
+              //             height: 100,
+              //             width: 60,
+              //             child: Row(
+              //               children: [
+              //                 Padding(
+              //                   padding: const EdgeInsets.only(bottom: 1, left: 6),
+              //                   child: Text(avgCakeRating.toString(), style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.white),),
+              //                 ),
+              //                 const SizedBox(width: 1,),
+              //                 const Padding(
+              //                   padding: EdgeInsets.only(top : 2.5, right: 4),
+              //                   child: Icon(Icons.star_rounded, color:Colors.white,size: 17,),
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //
+              //           // const SizedBox(width: 20,),
+              //           // Text(widget.dateOfReview,  style: const TextStyle(color: Colors.black38, fontSize: 12),),
+              //
+              //         ],
+              //       )
+              //   ),
+              // ),
+
+
+
+              //RatingBox(),
+              //****************************************************************************************************************
+
+            Row(
+              children: [
+                const SizedBox(width: 16,),
+                Container(
+                  height: 40,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    gradient: ratingGradient,// LinearGradient(colors: [Color(0xFF43A047), Color(0xFFAED581)], begin: Alignment.bottomRight, end: Alignment.topLeft),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children: [
+
+                        Text(avgCakeRating.toString(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),),
+                        //SizedBox(width: 4,),
+                        const Padding(
+                          padding: EdgeInsets.only(left : 2.0),
+                          child: Icon(Icons.star_rounded, color:Colors.white,size: 25,),
                         ),
-                      ),
-                    )
-                  ],
+                        SizedBox()
+                      ],
+                    ),
+                  ),
                 ),
+              ),
+                ElevatedButton(onPressed: (){
 
-                //padding: EdgeInsets.all(20),
+                    showDialog(context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                      return Dialog(
+
+                        child: Container(
+                          width: deviceWidth,
+                          height: deviceHeight*0.9,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.yellow, ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 15,),
+                              Text('Hello'),
+                              SizedBox(height: 55,),
+                              ElevatedButton(onPressed: () {
+                                Navigator.of(context).pop();
+                              }, child: Text('Take me back'))
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+
+
+                }, child: Text('demo'))
+            ],
+          ),
+
+              //**********************************************************************************************************
+
+              const SizedBox(height: 15,),
+              
+              
               InkWell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(15.0),
                   child: Row(
                     children: [
-                      SizedBox(width: 10,),
+                      SizedBox(width: 4,),
                       Text('See All Reviews', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),),
                       Spacer(),
                       Icon(Icons.chevron_right),
@@ -638,24 +862,11 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                 ),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                    return ReviewsPage();
+                    return ReviewsPage(cakeName: Cakes_List[widget.index1].name,);
                   },
                   ));
                 },
               ),
-
-              // ElevatedButton(onPressed: (){
-              //   pickFromGallery();
-              // },
-              //     child: Text('Upload from Gallery')),
-              // Container(
-              //   key: UniqueKey(),
-              //   child: pickedImage!=null ? Image.file(File(pickedImage!.path)) : Text('No image selected'),
-              //
-              // ),
-              // Container(
-              //   //child: clickedImage!=null ? Image.file(clickedImage!) : const Text('No Image clicked'),
-              // ),
             ],
           ),
         ),

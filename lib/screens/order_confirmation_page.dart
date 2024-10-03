@@ -22,8 +22,8 @@ class OrderConfirmation extends StatefulWidget {
 }
 
 
-final firestore = FirebaseFirestore.instance;
-final firebase = FirebaseAuth.instance;
+final _firestore = FirebaseFirestore.instance;
+final _firebase = FirebaseAuth.instance;
 
 
 Future<void> sendOrdersToFirebase() async{
@@ -46,13 +46,15 @@ class _OrderConfirmationState extends State<OrderConfirmation> {
   Widget build(BuildContext context) {
     var deviceHeight = MediaQuery.of(context).size.height;
     var deviceWidth = MediaQuery.of(context).size.width;
+
+
     return Scaffold(
       body: Padding(
         padding:  EdgeInsets.symmetric(horizontal: deviceWidth*0.03, vertical: 40),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -104,7 +106,7 @@ class _OrderConfirmationState extends State<OrderConfirmation> {
                 padding: const EdgeInsets.all(8),
                 child: Card(
 
-                    child: ListTile(leading: Text('Phone Number'),trailing: Text(userNum.toString()))),
+                    child: ListTile(leading: Text('Phone Number'),trailing: Text(userkaPhoneNumber.toString()))),
               ),
               
               Padding(
@@ -125,7 +127,7 @@ class _OrderConfirmationState extends State<OrderConfirmation> {
 
                 try{
 
-                  await firestore.collection('Cake Orders').add(
+                  await _firestore.collection('Cake Orders').add(
                       {
                     'Order ID' : generateRandomString(10),
                     'Cake Name' : Cakes_List[widget.cakeNameIndex].name.toString(),
@@ -152,7 +154,9 @@ class _OrderConfirmationState extends State<OrderConfirmation> {
                 
                 Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
                   return OrderConfirmedPage();
-                },));
+                  },
+                )
+                );
 
 
               },

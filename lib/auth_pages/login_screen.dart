@@ -288,7 +288,7 @@ class _loginscreenState extends State<loginscreen> {
                     onPressed: (){
 
                       emailloginfunction();
-                      print('sign in pressed');
+                      //print('sign in pressed');
 
                       // passwordcontroller.clear();
                       // emailcontroller.clear();

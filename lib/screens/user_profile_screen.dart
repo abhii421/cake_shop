@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-int? userNum;
+String? userNum;
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -39,7 +39,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         var data = userDoc.data() as Map<String, dynamic>;
         userkaName = data['Name'] as String;
         userkaAddress = data['Address'] as String;
-        userNum = data['Phone Number'];
+        userNum = data['Phone Number'] as String;
         print(data);
         print(userNum);
       });
