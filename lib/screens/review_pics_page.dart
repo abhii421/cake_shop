@@ -62,38 +62,88 @@ class _ReviewPicsPageState extends State<ReviewPicsPage> {
       //if showOrPop is 1, show the dialogue, else is 0, the dialogue is already there, just remove the dialogue
       print('show Dialog called');
 
-      if (showOrPop == 1){
-        showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (Dialog_context) {
-            return Dialog(
-              child: Container(
-                width: deviceWidth,
-                height: deviceHeight * 0.8,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Lottie.network(
-                          'https://lottie.host/63f81e80-f2fc-4b46-8c20-3e7daf2d504d/9IIiPDHeaI.json'),
-                    ),
 
-                  ],
-                ),
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (Dialog_context) {
+          return Dialog(
+            child: Container(
+
+              width: deviceWidth,
+              height: deviceHeight * 0.8,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white,
               ),
-            );
-          },
-        );
 
-      }
-      if(showOrPop == 0){
-        Navigator.of(context, rootNavigator: true).pop();
-
-        //keeping rootNavigator to true so that the dialog pops not the background screen below the dialog
-      }
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  showOrPop == 1?
+                  Center(
+                    child: Lottie.network(
+                        /*'https://lottie.host/63f81e80-f2fc-4b46-8c20-3e7daf2d504d/9IIiPDHeaI.json'*/
+                        'https://lottie.host/a196b738-b1d9-4d5e-bad6-c19bbdf116be/DWykJpSDwt.json' //processing animation
+                    ),
+                  ) : Center(child: Lottie.network(
+                    /*'https://lottie.host/1ebdf132-6017-4bea-9dc2-1f62793c3f7c/xMFpPgz4yb.json'*/
+                      'https://lottie.host/e814bbe7-11be-4148-a5ff-91ca5d60dcd3/TD5rzDMTT4.json',
+                  //tick mark animation
+                    repeat: false
+                  ),),
+                  const SizedBox(height: 30,),
+                  if (showOrPop == 0) ElevatedButton(onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.of(context).pop();
+                  }, child: const Text('Okay!')) else Container(),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      
+      
+      
+      
+      
+      
+      
+      
+      // if (showOrPop == 1){
+      //   showDialog(
+      //     barrierDismissible: false,
+      //     context: context,
+      //     builder: (Dialog_context) {
+      //       return Dialog(
+      //         child: Container(
+      //           width: deviceWidth,
+      //           height: deviceHeight * 0.8,
+      //           decoration: BoxDecoration(
+      //             borderRadius: BorderRadius.circular(15),),
+      //           child: Column(
+      //             mainAxisAlignment: MainAxisAlignment.center,
+      //             children: [
+      //               Center(
+      //                 child: Lottie.network(
+      //                     'https://lottie.host/63f81e80-f2fc-4b46-8c20-3e7daf2d504d/9IIiPDHeaI.json'),
+      //               ),
+      //
+      //             ],
+      //           ),
+      //         ),
+      //       );
+      //     },
+      //   );
+      //
+      // }
+      // if(showOrPop == 0){
+      //   Navigator.of(context, rootNavigator: true).pop();
+      //
+      //   //keeping rootNavigator to true so that the dialog pops not the background screen below the dialog
+      // }
 
     }
 
@@ -111,7 +161,7 @@ class _ReviewPicsPageState extends State<ReviewPicsPage> {
           'UID' : userkaUID,
         });
         showOrRemoveDialog(0);
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {return ReviewUploadedScreen();},));
+        //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {return ReviewUploadedScreen();},));
       }
       catch(error) {
         print(error.toString());

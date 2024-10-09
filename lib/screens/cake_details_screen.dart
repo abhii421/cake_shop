@@ -5,19 +5,36 @@ import 'package:capstone_1/data/all_toppings_list.dart';
 import 'package:capstone_1/screens/homepage.dart';
 import 'package:capstone_1/screens/order_confirmation_page.dart';
 import 'package:capstone_1/screens/review_pics_page.dart';
-import 'package:capstone_1/widgets/rating_box.dart';
+//import 'package:capstone_1/widgets/rating_box.dart';
 import 'package:capstone_1/widgets/reviews_page.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+//import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:io';
+//import 'dart:io';
+
+//Features to add -
+//0. Add riverpod or bloc state management.
+//1. To add more than 1 pic in the reviews by user
+//2. to open the picture in full screen
+//3.Schedule the cake order
+//4. Show the delivery guy location
+//5. Average review function
+//6. User order UI
+//7. Reviews sorting by likes -- likes field to be added in review document
+//8. Date and time of ordering to be sent to firestore and orders sorted accordingly
+//9. Allow the delivery guy to deliver the order only if the location of customer is in 200m radius
+//10. UPI payment option
+//11. Reminder to admin panel for scheduled cakes prep and delivery
+//12. Extract Andrea's production course topics and search the topics separately on youtube one by one
+
+
 
 bool userReviewAllow = true;
 double avgCakeRating = 4;
 LinearGradient ratingGradient =  LinearGradient(colors: [Color(0xFF43A047), Color(0xFFAED581)], begin: Alignment.bottomRight, end: Alignment.topLeft);
-
+final _firestore = FirebaseFirestore.instance;
 
 
 class CakeDetailsScreen extends StatefulWidget {
@@ -95,7 +112,7 @@ double returnFinalPrice(int index, double cakeSize, double cakeToppingDaam){
 }
 
 
-//List myCakeOrders = [];
+
 
 class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
 
@@ -169,20 +186,20 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
 
     if(avgCakeRating >=4){
       setState(() {
-        ratingGradient = LinearGradient(colors: [Color(0xFF43A047), Color(0xFFAED581)], begin: Alignment.bottomRight, end: Alignment.topLeft);
+        ratingGradient = const LinearGradient(colors: [Color(0xFF43A047), Color(0xFFAED581)], begin: Alignment.bottomRight, end: Alignment.topLeft);
       });
     }
 
     if(avgCakeRating < 4 && avgCakeRating >= 3){
       setState(() {
-        ratingGradient = LinearGradient(colors: [/*Color(0xFFFEC163),*/   Color(0xFFDE4313), Colors.yellow,], begin: Alignment.topLeft, end: Alignment.bottomRight);
+        ratingGradient = const LinearGradient(colors: [/*Color(0xFFFEC163),*/   Color(0xFFDE4313), Colors.yellow,], begin: Alignment.topLeft, end: Alignment.bottomRight);
       });
 
     }
 
     if(avgCakeRating < 3){
       setState(() {
-        ratingGradient = LinearGradient(colors: [Color(0xFFFEB692), Color(0xFFEA5455)]);
+        ratingGradient = const LinearGradient(colors: [Color(0xFFFEB692), Color(0xFFEA5455)]);
       });
     }
 
@@ -196,8 +213,8 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
     XFile? pickedImage;
     XFile? clickedImage;
     ImagePicker picker = ImagePicker();
-    FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
-    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    // FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+    // FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
     Future <void> pickFromGallery () async{
@@ -207,7 +224,7 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
 
       try{
 
-
+//flutter.ndkVersion
         if(pickedImg!=null){
           setState(() {
             pickedImage = pickedImg;
@@ -522,35 +539,6 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  // TextButton(
-                  //   onPressed: (){},
-                  //   child: const Text('Add to Cart', style: TextStyle(color: Colors.white, fontSize: 18),),
-                  //   style: TextButton.styleFrom(backgroundColor: Colors.black,elevation: 10,
-                  //       padding: EdgeInsets.symmetric(horizontal: deviceWidth*0.115, vertical: 18),
-                  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1),
-                  //       side: const BorderSide(style: BorderStyle.none))),),
-
-                  /*TextButton(
-                  onPressed: (){
-
-                    print(FirebaseAuth.instance.currentUser!.uid);
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      return OrderConfirmation(totalPrice: returnFinalPrice(widget.index1,cakeWeight,cakeToppingPrice),
-                        cakeToppingIndex: cakeToppingIndexforPassingToOrderConfirmationPage,
-                        cakeSize: cakeWeight,
-                        cakeNameIndex: widget.index1,
-                      );
-                    },));
-                    //print(Fire)
-                  },
-                    child: const Text('                Buy Now                  ', style: const TextStyle(color: Colors.white, fontSize: 18),),
-                    style: TextButton.styleFrom( backgroundColor: Colors.black,elevation: 10,
-
-                        padding:  EdgeInsets.symmetric(horizontal: deviceWidth*0.150, vertical: 18),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(style: BorderStyle.none))),),*/
-
-
                   InkWell(
                     onTap: (){
 
@@ -590,7 +578,7 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
               const Divider(height: 2,),
 
               ExpansionTile(
-                // shape: ShapeBorder(),
+                 shape: Border.all(color: Colors.white,width: 0.1 ),
                 title: const Text('Product Ingredients', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),),
                 children: [
                   Padding(
@@ -805,46 +793,91 @@ class _CakeDetailsScreenState extends State<CakeDetailsScreen> {
                           padding: EdgeInsets.only(left : 2.0),
                           child: Icon(Icons.star_rounded, color:Colors.white,size: 25,),
                         ),
-                        SizedBox()
+                        const SizedBox(),
                       ],
                     ),
                   ),
                 ),
               ),
-                ElevatedButton(onPressed: (){
-
-                    showDialog(context: context,
-                        barrierDismissible: false,
-                        builder: (context) {
-                      return Dialog(
-
-                        child: Container(
-                          width: deviceWidth,
-                          height: deviceHeight*0.9,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.yellow, ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(height: 15,),
-                              Text('Hello'),
-                              SizedBox(height: 55,),
-                              ElevatedButton(onPressed: () {
-                                Navigator.of(context).pop();
-                              }, child: Text('Take me back'))
-                            ],
-                          ),
-                        ),
-                      );
-                    });
-
-
-                }, child: Text('demo'))
             ],
           ),
 
+              
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: deviceHeight*0.15,
+                  width: deviceWidth,
+
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        StreamBuilder(
+                            stream: _firestore.collection('Cake Reviews').doc(Cakes_List[widget.index1].name).collection(Cakes_List[widget.index1].name).snapshots(),
+                            builder: (context, snapshot) {
+                              if(snapshot.connectionState == ConnectionState.waiting){
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              else if(snapshot.connectionState == ConnectionState.active){
+                                if(snapshot.hasData){
+                                  List<QueryDocumentSnapshot<Map<String, dynamic>>> reviewsDocs = snapshot.data!.docs;
+
+                                  return Container(
+                                    width: deviceWidth,
+                                    height: deviceHeight*0.3,
+                                    //color: Colors.white,
+                                    child: ListView.builder(
+                                      itemCount: reviewsDocs.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder:(context, index) {
+                                        QueryDocumentSnapshot<Map<String, dynamic>> individualReviewDocument = reviewsDocs[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Container(
+                                              width: deviceWidth*0.25,
+                                              height: deviceHeight*0.15,
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(17)),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(12),
+                                                child: Image.network(
+                                                  individualReviewDocument['Image URL'],
+                                                  height: 100,
+                                                  width: 80,
+                                                  fit: BoxFit.cover,
+
+                                                ),
+                                              )),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                                else if (snapshot.hasData == false){
+                                  showDialog(context: context, builder:  (context) {
+                                    return const AlertDialog(content: Text('No data found'),);
+                                  },);
+                                }
+
+                                else if(snapshot.hasError){
+                                  showDialog(context: context, builder:  (context) {
+                                    return const AlertDialog(content: Text('There is an error'),);
+                                  },);
+                                }
+                              }
+                              return Container();
+                            },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               //**********************************************************************************************************
 
-              const SizedBox(height: 15,),
+              //const SizedBox(height: 15,),
               
               
               InkWell(

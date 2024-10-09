@@ -152,7 +152,9 @@ class _ReviewContainerState extends State<ReviewContainer> {
                   height: deviceHeight*0.18,
                   //width: deviceWidth,
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),),
-                  child: Image.network(widget.reviewImageSource!, fit: BoxFit.scaleDown,),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(widget.reviewImageSource!, fit: BoxFit.scaleDown,)),
 
                 )
               ],

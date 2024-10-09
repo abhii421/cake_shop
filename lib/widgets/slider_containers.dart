@@ -34,7 +34,7 @@ class SliderContainers extends StatelessWidget {
                 const SizedBox(height: 18,),
                 Padding(
                   padding: const EdgeInsets.only(left: 17),
-                  child: Text(cakeName, style: TextStyle(fontSize: 20),),
+                  child: Text(cakeName, style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w300),),
                 )
             ],
           ),

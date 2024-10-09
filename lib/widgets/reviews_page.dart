@@ -34,7 +34,6 @@ class _ReviewsPageState extends State<ReviewsPage> {
       appBar: AppBar(
         title: const Text('Ratings and Reviews', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                 ),
-
       ),
         body: StreamBuilder(
           stream: _firestore.collection('Cake Reviews').doc(widget.cakeName).collection(widget.cakeName).snapshots(),

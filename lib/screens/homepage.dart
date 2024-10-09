@@ -1,15 +1,18 @@
-import 'dart:ui';
+//import 'dart:ui';
 import 'package:capstone_1/data/all_cake_list.dart';
 import 'package:capstone_1/screens/admin_auth_page.dart';
 import 'package:capstone_1/screens/admin_home_page.dart';
 import 'package:capstone_1/screens/cake_details_screen.dart';
 import 'package:capstone_1/screens/user_profile_screen.dart';
 import 'package:capstone_1/screens/users_orders_page.dart';
+import 'package:capstone_1/widgets/drawer_buttons_inkwell.dart';
+import 'package:capstone_1/widgets/gradient_button.dart';
 import 'package:capstone_1/widgets/slider_containers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_1/main.dart';
+import 'package:lottie/lottie.dart';
 
 String? userkaName;
 String? userkaAddress;
@@ -84,52 +87,107 @@ class _homepageState extends State<homepage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
 
-                Image.asset('assets/images/chocolate-cake.png',
-                ),
-              const SizedBox(height: 30,),
-              ElevatedButton(onPressed: (){
+                // Image.asset('assets/images/chocolate-cake.png',
+                // ),
+              Lottie.asset('assets/animations/Animation - 1727837813840.json'),
+              //Lottie.network('https://lottie.host/9b08c455-2ef9-4f4f-975d-aba5d4d75a97/WfjjQTftvJ.json'),
+              
+              const SizedBox(height: 35,),
+              // ElevatedButton(onPressed: (){
+              //       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              //         return UserProfilePage();
+              //       },));
+              //   },
+              //   child: const Text('Profile'),),
+              //
+              // const SizedBox(height: 30,),
+              // ElevatedButton(onPressed: (){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              //     return UsersOrdersPage();
+              //   },));
+              // }, child: const Text('My Orders'),),
+              // const SizedBox(height: 30,),
+              // ElevatedButton(
+              //     onPressed:() async {
+              //   FirebaseAuth.instance.signOut();
+              //   //await FirebaseServices().signOut();
+              //   Navigator.pop(context, MaterialPageRoute(builder: (context)=> homepage()));
+              //   Navigator.push(context, MaterialPageRoute(
+              //       builder : (context)=> MyHomePage(title: 'title')
+              //   )
+              //  );
+              // },
+              //     child: const Text('Sign Out'),
+              // ),
+
+              Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: InkWell(
+                  onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                       return UserProfilePage();
                     },));
-                },
-                child: const Text('Profile'),),
-
-              const SizedBox(height: 30,),
-              ElevatedButton(onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return UsersOrdersPage();
-                },));
-              }, child: const Text('My Orders'),),
-              const SizedBox(height: 30,),
-              ElevatedButton(
-                  onPressed:() async {
-                FirebaseAuth.instance.signOut();
-                //await FirebaseServices().signOut();
-                Navigator.pop(context, MaterialPageRoute(builder: (context)=> homepage()));
-                Navigator.push(context, MaterialPageRoute(
-                    builder : (context)=> MyHomePage(title: 'title')
-                )
-               );
-              },
-                  child: const Text('Sign Out'),
+                  },
+                  child: GradientButton(buttonText: 'My Profile', lengthDevice: 0.06,widthDevice: 0.620,),
+                ),
               ),
-              const SizedBox(height: 30,),
-              ElevatedButton(onPressed: (){
-                if(adminLoggedIn == 0) {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) {
-                        return AdminAuthPage();
-                      },));
-                }
 
-                else if(adminLoggedIn == 1){
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) {
-                        return AdminHomePage();
-                      },));
-                }
-              }, child: Text('Admin Panel')),
-              const SizedBox(height: 30,)
+              Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: InkWell(
+                  onTap:(){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                      return UsersOrdersPage();
+                    },));
+                  },
+                child: GradientButton(buttonText: 'My Orders', lengthDevice: 0.06,widthDevice: 0.645,),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: InkWell(
+                  onTap: () async {
+                          FirebaseAuth.instance.signOut();
+                          //await FirebaseServices().signOut();
+                          Navigator.pop(context, MaterialPageRoute(builder: (context)=> homepage()));
+                          Navigator.push(context, MaterialPageRoute(
+                              builder : (context)=> MyHomePage(title: 'title')
+                              )
+                            );
+                        },
+                  child: GradientButton(buttonText: 'Sign Out', lengthDevice: 0.06,widthDevice: 0.670,),
+
+                ),
+              ),
+
+              //const SizedBox(height: 30,),
+
+              Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: InkWell(
+                  child: GradientButton(buttonText: 'Admin Panel', lengthDevice: 0.06,widthDevice: 0.695,),
+                  onTap: (){
+                    if(adminLoggedIn == 0) {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) {
+                            return AdminAuthPage();
+                          },));
+                    }
+
+                    else if(adminLoggedIn == 1){
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) {
+                            return AdminHomePage();
+                          },));
+                    }
+                  },
+                ),
+              ),
+              // ElevatedButton(onPressed: (){
+              //
+              // }, child: Text('Admin Panel')),
+              // const SizedBox(height: 30,)
             ],
           ),
       ),
@@ -246,9 +304,12 @@ class _homepageState extends State<homepage> {
                               height: deviceHeight*0.23,
                               width : deviceWidth*0.432,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.purpleAccent.shade100.withOpacity(0.4)
-                                                  ),
+                              gradient: LinearGradient(colors: [Color.fromARGB(150, 234, 132, 176), Color.fromARGB(255, 178, 154, 211),],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                  ),
+                                borderRadius: BorderRadius.circular(20)
+                                ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
@@ -257,7 +318,7 @@ class _homepageState extends State<homepage> {
                                     child: Image.asset(Cakes_List[3].imgPath,),
                                   ),
                                   //SizedBox(height : 10),
-                                  const Text('New this week', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),)
+                                  const Text('New this week', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300, color: Colors.white),)
                                 ],
 
                               ),
@@ -291,7 +352,7 @@ class _homepageState extends State<homepage> {
                                     child: Image.asset(Cakes_List[2].imgPath,),
                                   ),
                                   //SizedBox(height : 10),
-                                  const Text('Best Seller', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),)
+                                  const Text('Best Seller', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),)
                                 ],
 
                                 ),
