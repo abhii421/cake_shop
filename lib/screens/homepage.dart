@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_1/main.dart';
 import 'package:lottie/lottie.dart';
+import 'package:local_auth/local_auth.dart';
 
 String? userkaName;
 String? userkaAddress;
@@ -30,6 +31,8 @@ class homepage extends StatefulWidget {
 
 
 class _homepageState extends State<homepage> {
+late final LocalAuthentication auth;
+bool _supportState = false;
 
 
   @override
@@ -37,6 +40,10 @@ class _homepageState extends State<homepage> {
     super.initState();
 
     getUserData();
+    auth= LocalAuthentication();
+    auth.isDeviceSupported().then((bool isSupported) => setState(() {
+      _supportState = true;
+    }));
   }
 
 

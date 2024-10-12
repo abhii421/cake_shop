@@ -1,3 +1,4 @@
+import 'package:capstone_1/data/all_cake_list.dart';
 import 'package:capstone_1/screens/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,14 +17,6 @@ class UsersOrdersPage extends StatefulWidget {
 }
 
 class _UsersOrdersPageState extends State<UsersOrdersPage> {
-
-
-
-  @override
-  void initState() {
-    super.initState();
-    //getUser();
-  }
 
   // Future<void> getUser() async {
   //   user = _auth.currentUser;
@@ -80,60 +73,71 @@ class _UsersOrdersPageState extends State<UsersOrdersPage> {
                   itemCount: listOfUserOrders.length,
                   itemBuilder: (context, index) {
                   QueryDocumentSnapshot<Map<String, dynamic>> singleUserOrder = listOfUserOrders[index];
-                  return Card(
-                    child: ExpansionTile(
-                        title: Text(singleUserOrder['Cake Name']),
-                        subtitle: Text('Weight: ${singleUserOrder['Cake Weight (in pounds)']} pounds | Topping: ${singleUserOrder['Topping Name']}'),
-                        children: [
-                                    Card(
-                                      elevation: 10,
-                                      child: ListTile(
-                                        leading: const Text('Cake Price'),
-                                        trailing: Text(' ₹ ${singleUserOrder['Cake Price']}'
-                                      ),
-                                    ),
-                                    ),
-                                    Card(
-                                      elevation: 10,
-                                      child: ListTile(
-                                        leading: const Text('Order ID'),
-                                        trailing: Text('${singleUserOrder['Order ID']}'
-                                        ),
-                                      ),
-                                    ),
-                                    Card(
-                                      elevation: 10,
-                                      child: ListTile(
-                                        leading: const Text('Order Accepted'),
-                                        trailing: Text('${singleUserOrder['Order Accepted'].toString()}'),
-                                      ),
-                                    ),
+                  String thisCakeName = singleUserOrder['Cake Name'];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 18),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 170,
+                          child: Image.asset(cakeMap[thisCakeName], fit: BoxFit.fitHeight,)      ,
+                        ),
+                        Card(
+                          child: ExpansionTile(
+                              title: Text(singleUserOrder['Cake Name']),
+                              subtitle: Text('Weight: ${singleUserOrder['Cake Weight (in pounds)']} pounds | Topping: ${singleUserOrder['Topping Name']}'),
+                              children: [
+                                          Card(
+                                            elevation: 10,
+                                            child: ListTile(
+                                              leading: const Text('Cake Price'),
+                                              trailing: Text(' ₹ ${singleUserOrder['Cake Price']}'
+                                            ),
+                                          ),
+                                          ),
+                                          Card(
+                                            elevation: 10,
+                                            child: ListTile(
+                                              leading: const Text('Order ID'),
+                                              trailing: Text('${singleUserOrder['Order ID']}'
+                                              ),
+                                            ),
+                                          ),
+                                          Card(
+                                            elevation: 10,
+                                            child: ListTile(
+                                              leading: const Text('Order Accepted'),
+                                              trailing: Text('${singleUserOrder['Order Accepted'].toString()}'),
+                                            ),
+                                          ),
 
-                                    Card(
-                                      elevation: 10,
-                                      child: ListTile(
-                                        leading: const Text('Order Prepared'),
-                                        trailing: Text('${singleUserOrder['Order Prepared']}'),
-                                      ),
-                                    ),
+                                          Card(
+                                            elevation: 10,
+                                            child: ListTile(
+                                              leading: const Text('Order Prepared'),
+                                              trailing: Text('${singleUserOrder['Order Prepared']}'),
+                                            ),
+                                          ),
 
-                                    Card(
-                                      elevation: 10,
-                                      child: ListTile(
-                                        leading: const Text('Order Dispatched'),
-                                        trailing: Text('${singleUserOrder['Order Dispatched']}'),
-                                      ),
-                                    ),
+                                          Card(
+                                            elevation: 10,
+                                            child: ListTile(
+                                              leading: const Text('Order Dispatched'),
+                                              trailing: Text('${singleUserOrder['Order Dispatched']}'),
+                                            ),
+                                          ),
 
-                                    Card(
-                                      elevation: 10,
-                                      child: ListTile(
-                                        leading: const Text('Order Delivered'),
-                                        trailing: Text('${singleUserOrder['Order Delivered']}'
-                                      ),
-                                    ),
-                                    )
-                        ],
+                                          Card(
+                                            elevation: 10,
+                                            child: ListTile(
+                                              leading: const Text('Order Delivered'),
+                                              trailing: Text('${singleUserOrder['Order Delivered']}'
+                                            ),
+                                          ),
+                                          )
+                              ],
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },

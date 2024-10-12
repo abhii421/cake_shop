@@ -20,4 +20,14 @@ List<String> imagePaths = ['assets/images/chocolate-cake.png',
   'assets/images/7.png',
 ];
 
+Map cakeMap = {
+  'Strawberry peanut Cake': imagePaths[6],
+  'Strawberry Vanilla Cake': imagePaths[1],
+  'Strawberry Frosted Peanut': imagePaths[2],
+  'Pure Chocolate Cake': imagePaths[3],
+  'Vanilla with Spreading Cake': imagePaths[4],
+  'ButterScotch Strawberry Cake': imagePaths[5],
+  'Mixed Fruit Leaf Cake': imagePaths[7],
+};
+
 String news = 'assets/images/3a.png';

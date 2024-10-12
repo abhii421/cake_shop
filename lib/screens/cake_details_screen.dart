@@ -18,7 +18,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 //0. Add riverpod or bloc state management.
 //1. To add more than 1 pic in the reviews by user
 //2. to open the picture in full screen
-//3.Schedule the cake order
+//3. Schedule the cake order
 //4. Show the delivery guy location
 //5. Average review function
 //6. User order UI
@@ -28,6 +28,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 //10. UPI payment option
 //11. Reminder to admin panel for scheduled cakes prep and delivery
 //12. Extract Andrea's production course topics and search the topics separately on youtube one by one
+//13. Add the number of cakes to be ordered.
+//14. Add the option to add a topping at the review your order page
+//15. Add the Add to cart feature.
+//16. Add the cake topper feature at the review cake order page -- for reference see the image named HBD Cake Topper in assets/images
+//17. Local Authentication like fingerprint & password -- https://www.youtube.com/watch?v=cYeQCGr6F7c
 
 
 
