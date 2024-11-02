@@ -1,4 +1,4 @@
-# capstone_1
+# cake_shop
 
 A new Flutter project.
 
